@@ -94,6 +94,14 @@ int object_isset(object_t *object)
 	return 0;
 }
 
+int object_isa(object_t *object, const char *type)
+{
+	if (object_isset(object) && type != NULL && !strcmp(object->type, type))
+		return 1;
+	
+	return 0;
+}
+
 void object_free(object_t *object, void *callback, void *callback_data)
 {
 	void (*cb)(void *, void *) = callback;

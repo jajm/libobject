@@ -38,6 +38,12 @@ object_isset(
 	object_t *object
 );
 
+int
+object_isa(
+	object_t *object,
+	const char *type
+);
+
 void
 object_free(
 	object_t *object,

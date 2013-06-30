@@ -25,6 +25,7 @@ int main()
 	o = object_new(string_type, s);
 	ok(o != NULL);
 	ok(object_isset(o));
+	ok(object_isa(o, string_type));
 	str_eq(object_type(o), string_type);
 	ok(object_type(o) != string_type);
 	str_eq(object_value(o), s);
@@ -32,6 +33,7 @@ int main()
 
 	ok(0 == object_set(o, string_type2, s2));
 	ok(object_isset(o));
+	ok(object_isa(o, string_type2));
 	str_eq(object_type(o), string_type2);
 	ok(object_type(o) != string_type2);
 	str_eq(object_value(o), s2);
@@ -39,11 +41,13 @@ int main()
 
 	object_unset(o, NULL, NULL);
 	ok(object_isset(o) == 0);
+	ok(object_isa(o, string_type2) == 0);
 	str_eq(object_type(o), "");
 	ok(object_value(o) == NULL);
 
 	object_free(o, NULL, NULL);
 	ok(object_isset(NULL) == 0);
+	ok(object_isa(o, string_type2) == 0);
 
 	if (tests_failed == 0) {
 		printf("All tests pass!\n");
