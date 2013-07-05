@@ -3,47 +3,95 @@
 
 #include "object.h"
 
-object_t *
+typedef object_t array_t;
+
+array_t *
 array_new(
 	unsigned int size,
-	void *values[]
+	object_t *values[]
 );
 
 #define array(...) ({ \
-	void *__values[] = {__VA_ARGS__}; \
-	array_new(sizeof(__values) / sizeof(void *), __values); \
+	object_t *__values[] = {__VA_ARGS__}; \
+	array_new(sizeof(__values) / sizeof(object_t *), __values); \
 })
 
 void
 array_push(
-	object_t *object,
-	void *value
+	array_t *array,
+	object_t *object
 );
 
 void
 array_unshift(
-	object_t *object,
-	void *value
+	array_t *array,
+	object_t *object
 );
 
-void *
+object_t *
 array_pop(
-	object_t *object
+	array_t *array
 );
 
-void *
+object_t *
 array_shift(
-	object_t *object
+	array_t *array
+);
+
+object_t *
+array_get(
+	array_t *array,
+	unsigned int offset
+);
+
+void
+array_splice(
+	array_t *array,
+	unsigned int offset,
+	unsigned int length,
+	void *callback,
+	void *callback_data,
+	array_t *replacement
+);
+
+array_t *
+array_slice(
+	array_t *array,
+	unsigned int offset,
+	unsigned int length,
+	void *callback,
+	void *callback_data
+);
+
+void
+array_map(
+	array_t *array,
+	void *callback,
+	void *callback_data
+);
+
+array_t *
+array_filter(
+	array_t *array,
+	void *callback,
+	void *callback_data
+);
+
+object_t *
+array_reduce(
+	array_t *array,
+	void *callback,
+	void *callback_data
 );
 
 unsigned int
 array_size(
-	object_t *object
+	array_t *array
 );
 
 void
 array_free(
-	object_t *object,
+	array_t *array,
 	void *callback,
 	void *callback_data
 );

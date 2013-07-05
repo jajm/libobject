@@ -4,6 +4,7 @@ include ../config.mk
 CFLAGS := -Wall -Wextra -Werror -g -std=c99 $(CFLAGS)
 CPPFLAGS := -I../include $(CPPFLAGS)
 LIBTOOL_VERSION := $(LIBTOOL_CURRENT):$(LIBTOOL_REVISION):$(LIBTOOL_AGE)
+LDFLAGS := $(shell pkg-config --libs libgends)
 
 OBJS := $(patsubst %.c,%.lo,$(wildcard *.c))
 

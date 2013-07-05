@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "array.h"
+#include "array_iterator.h"
 
 int tests_failed = 0;
 
@@ -11,40 +12,54 @@ int tests_failed = 0;
 		printf("Test failed at line %d: %s\n", __LINE__, #test); \
 	}
 
+#define string(s) \
+	object_new("STRING", s)
+
 #define str_eq(got, expected) \
-	ok(strcmp(got, expected) == 0)
+	ok(strcmp(object_value(got), expected) == 0)
 
 int main()
 {
-	object_t *o;
+	array_t *a;
+	int i = 0;
 
-	o = array();
-	ok(object_is_array(o));
-	ok(array_size(o) == 0);
+	a = array();
+	ok(object_is_array(a));
+	ok(array_size(a) == 0);
 
-	array_push(o, "one");
-	array_push(o, "two");
-	ok(array_size(o) == 2);
+	array_push(a, string("one"));
+	array_push(a, string("two"));
+	ok(array_size(a) == 2);
 
-	array_unshift(o, "zero");
-	ok(array_size(o) == 3);
+	array_unshift(a, string("zero"));
+	ok(array_size(a) == 3);
 
-	str_eq(array_pop(o), "two");
-	ok(array_size(o) == 2);
+	array_foreach(a, o) {
+		if (i == 0) { str_eq(o, "zero"); }
+		else if (i == 1) { str_eq(o, "one"); }
+		else if (i == 2) { str_eq(o, "two"); }
+		i++;
+	}
 
-	str_eq(array_shift(o), "zero");
-	ok(array_size(o) == 1);
+	str_eq(array_pop(a), "two");
+	ok(array_size(a) == 2);
 
-	array_free(o, NULL, NULL);
+	str_eq(array_shift(a), "zero");
+	ok(array_size(a) == 1);
 
-	o = object_new("", NULL);
-	ok(!object_is_array(o));
+	array_free(a, NULL, NULL);
 
-	o = object_new("array", NULL);
-	ok(!object_is_array(o));
+	a = object_new("", NULL);
+	ok(!object_is_array(a));
+	object_free(a, NULL, NULL);
 
-	o = object_new("ARRAY", NULL);
-	ok(object_is_array(o));
+	a = object_new("array", NULL);
+	ok(!object_is_array(a));
+	object_free(a, NULL, NULL);
+
+	a = object_new("ARRAY", NULL);
+	ok(object_is_array(a));
+	array_free(a, NULL, NULL);
 
 	if (tests_failed == 0) {
 		printf("All tests pass!\n");
