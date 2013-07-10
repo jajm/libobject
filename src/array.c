@@ -1,15 +1,21 @@
 #include <stdio.h>
 #include <libgends/dlist.h>
+#include "log.h"
+#include "exception.h"
 #include "object.h"
 #include "array.h"
 
 static const char array_type[] = "ARRAY";
 
+#define assert_object_is_array(object) \
+	if (!object_is_array(object)) \
+		object_throw_bad_type(object, array_type);
+
 array_t * array_new(unsigned int size, object_t *objects[])
 {
 	gds_dlist_t *list = gds_dlist_new_from_array(size, (void **)objects);
 	if (list == NULL) {
-		fprintf(stderr, "List creation failed\n");
+		log_error("List creation failed");
 		return NULL;
 	}
 
@@ -18,60 +24,48 @@ array_t * array_new(unsigned int size, object_t *objects[])
 
 void array_push(array_t *array, object_t *object)
 {
-	if (!object_is_array(array)) {
-		fprintf(stderr, "object is not an array\n");
-		return;
-	}
+	assert_object_is_array(array);
+
 	gds_dlist_push(object_value(array), object);
 }
 
 void array_unshift(array_t *array, object_t *object)
 {
-	if (!object_is_array(array)) {
-		fprintf(stderr, "object is not an array\n");
-		return;
-	}
+	assert_object_is_array(array);
+
 	gds_dlist_unshift(object_value(array), object);
 }
 
 object_t * array_pop(array_t *array)
 {
-	if (!object_is_array(array)) {
-		fprintf(stderr, "object is not an array\n");
-		return NULL;
-	}
+	assert_object_is_array(array);
+
 	return gds_dlist_pop(object_value(array));
 }
 
 object_t * array_shift(array_t *array)
 {
-	if (!object_is_array(array)) {
-		fprintf(stderr, "object is not an array\n");
-		return NULL;
-	}
+	assert_object_is_array(array);
+
 	return gds_dlist_shift(object_value(array));
 }
 
 object_t * array_get(array_t *array, unsigned int offset)
 {
-	if (!object_is_array(array)) {
-		fprintf(stderr, "object is not an array\n");
-		return NULL;
-	}
+	assert_object_is_array(array);
+
 	return gds_dlist_get(object_value(array), offset);
 }
 
 void array_splice(array_t *array, unsigned int offset, unsigned int length,
 	void *callback, void *callback_data, array_t *replacement)
 {
-	if (!object_is_array(array)) {
-		fprintf(stderr, "object is not an array\n");
-		return;
+	assert_object_is_array(array);
+
+	if (replacement != NULL) {
+		assert_object_is_array(replacement);
 	}
-	if (replacement != NULL && !object_is_array(replacement)) {
-		fprintf(stderr, "replacement is not an array\n");
-		return;
-	}
+
 	gds_dlist_splice(object_value(array), offset, length, callback,
 		callback_data, object_value(replacement));
 }
@@ -81,10 +75,7 @@ array_t * array_slice(array_t *array, unsigned int offset, unsigned int length,
 {
 	gds_dlist_t *slice;
 
-	if (!object_is_array(array)) {
-		fprintf(stderr, "object is not an array\n");
-		return NULL;
-	}
+	assert_object_is_array(array);
 
 	slice = gds_dlist_slice(object_value(array), offset, length, callback,
 		callback_data);
@@ -93,20 +84,16 @@ array_t * array_slice(array_t *array, unsigned int offset, unsigned int length,
 
 void array_map(array_t *array, void *callback, void *callback_data)
 {
-	if (!object_is_array(array)) {
-		fprintf(stderr, "object is not an array\n");
-		return;
-	}
+	assert_object_is_array(array);
 	gds_dlist_map(object_value(array), callback, callback_data);
 }
 
 array_t * array_filter(array_t *array, void *callback, void *callback_data)
 {
 	gds_dlist_t *filtered;
-	if (!object_is_array(array)) {
-		fprintf(stderr, "object is not an array\n");
-		return NULL;
-	}
+
+	assert_object_is_array(array);
+
 	filtered = gds_dlist_filter(object_value(array), callback,
 		callback_data);
 	return object_new(array_type, filtered);
@@ -114,28 +101,22 @@ array_t * array_filter(array_t *array, void *callback, void *callback_data)
 
 object_t * array_reduce(array_t *array, void *callback, void *callback_data)
 {
-	if (!object_is_array(array)) {
-		fprintf(stderr, "object is not an array\n");
-		return NULL;
-	}
+	assert_object_is_array(array);
+
 	return gds_dlist_reduce(object_value(array), callback, callback_data);
 }
 
 unsigned int array_size(array_t *array)
 {
-	if (!object_is_array(array)) {
-		fprintf(stderr, "object is not an array\n");
-		return 0;
-	}
+	assert_object_is_array(array);
+
 	return gds_dlist_size(object_value(array));
 }
 
 void array_free(array_t *array, void *callback, void *callback_data)
 {
-	if (!object_is_array(array)) {
-		fprintf(stderr, "object is not an array\n");
-		return;
-	}
+	assert_object_is_array(array);
+
 	gds_dlist_free(object_value(array), callback, callback_data);
 	object_free(array, NULL, NULL);
 }

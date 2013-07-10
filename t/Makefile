@@ -2,7 +2,7 @@ include ../package.mk
 include ../config.mk
 
 CFLAGS := -Wall -Wextra -Werror -g -std=c99 $(CFLAGS)
-CPPFLAGS := -I../include $(CPPFLAGS)
+CPPFLAGS := -iquote ../include $(CPPFLAGS)
 
 PROGRAMS := $(patsubst %.c,%,$(wildcard *.c))
 

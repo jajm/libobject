@@ -3,6 +3,7 @@
 #include <string.h>
 #include "array.h"
 #include "array_iterator.h"
+#include "string.h"
 
 int tests_failed = 0;
 
@@ -12,15 +13,13 @@ int tests_failed = 0;
 		printf("Test failed at line %d: %s\n", __LINE__, #test); \
 	}
 
-#define string(s) \
-	object_new("STRING", s)
-
 #define str_eq(got, expected) \
-	ok(strcmp(object_value(got), expected) == 0)
+	ok(strcmp(string_to_c_str(got), expected) == 0)
 
 int main()
 {
 	array_t *a;
+	string_t *s;
 	int i = 0;
 
 	a = array();
@@ -41,13 +40,17 @@ int main()
 		i++;
 	}
 
-	str_eq(array_pop(a), "two");
+	s = array_pop(a);
+	str_eq(s, "two");
+	string_free(s);
 	ok(array_size(a) == 2);
 
-	str_eq(array_shift(a), "zero");
+	s = array_shift(a);
+	str_eq(s, "zero");
+	string_free(s);
 	ok(array_size(a) == 1);
 
-	array_free(a, NULL, NULL);
+	array_free(a, string_free, NULL);
 
 	a = object_new("", NULL);
 	ok(!object_is_array(a));

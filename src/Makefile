@@ -2,9 +2,9 @@ include ../package.mk
 include ../config.mk
 
 CFLAGS := -Wall -Wextra -Werror -g -std=c99 $(CFLAGS)
-CPPFLAGS := -I../include $(CPPFLAGS)
+CPPFLAGS := -iquote ../include $(CPPFLAGS)
 LIBTOOL_VERSION := $(LIBTOOL_CURRENT):$(LIBTOOL_REVISION):$(LIBTOOL_AGE)
-LDFLAGS := $(shell pkg-config --libs libgends)
+LDFLAGS := $(shell pkg-config --libs libgends libexception lll)
 
 OBJS := $(patsubst %.c,%.lo,$(wildcard *.c))
 

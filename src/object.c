@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libexception/exception.h>
+#include "log.h"
+#include "exception.h"
 #include "object.h"
 
 struct object_s {
@@ -13,14 +16,13 @@ object_t * object_new(const char *type, void *value)
 	object_t *object;
 
 	if (type == NULL) {
-		fprintf(stderr, "type cannot be NULL\n");
+		log_error("type cannot be NULL");
 		return NULL;
 	}
 
 	object = malloc(sizeof(object_t));
 	if (object == NULL) {
-		fprintf(stderr, "Memory allocation failed\n");
-		return NULL;
+		object_throw_malloc_error(sizeof(object_t));
 	}
 
 	object->type = NULL;
@@ -63,8 +65,7 @@ int object_set(object_t *object, const char *type, void *value)
 		free(object->type);
 		object->type = malloc(sizeof(char) * (length+1));
 		if (object->type == NULL) {
-			fprintf(stderr, "Memory allocation failed\n");
-			return -1;
+			object_throw_malloc_error(sizeof(char) * (length+1));
 		}
 
 		strncpy(object->type, type, length+1);
