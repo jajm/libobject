@@ -37,18 +37,28 @@ string_length(
 );
 
 int
-string_cat(
+string_cat_from_array(
 	string_t *dest,
 	unsigned int n,
 	const char *src[]
 );
 
+#define string_cat(dest, ...) ({ \
+	const char *__args[] = { __VA_ARGS__ }; \
+	string_cat_from_array(dest, sizeof(__args) / sizeof(*__args), __args); \
+})
+
 int
-string_scat(
+string_scat_from_array(
 	string_t *dest,
 	unsigned int n,
 	const string_t *src[]
 );
+
+#define string_scat(dest, ...) ({ \
+	const string_t *__args[] = { __VA_ARGS__ }; \
+	string_scat_from_array(dest, sizeof(__args) / sizeof(*__args), __args); \
+})
 
 void
 string_free(

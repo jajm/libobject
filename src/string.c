@@ -147,7 +147,7 @@ size_t string_length(const string_t *string)
 	return (string_value != NULL) ? string_value->len : 0;
 }
 
-int string_cat(string_t *dest, unsigned int n, const char *src[])
+int string_cat_from_array(string_t *dest, unsigned int n, const char *src[])
 {
 	size_t len[n], total_len = 0;
 	unsigned int i;
@@ -169,7 +169,7 @@ int string_cat(string_t *dest, unsigned int n, const char *src[])
 	return total_len;
 }
 
-int string_scat(string_t *dest, unsigned int n, const string_t *src[])
+int string_scat_from_array(string_t *dest, unsigned int n, const string_t *src[])
 {
 	const char *s[n];
 	unsigned int i;
@@ -178,7 +178,7 @@ int string_scat(string_t *dest, unsigned int n, const string_t *src[])
 		s[i] = string_to_c_str(src[i]);
 	}
 
-	return string_cat(dest, n, s);
+	return string_cat_from_array(dest, n, s);
 }
 
 void string_free(string_t *string)
