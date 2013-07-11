@@ -100,7 +100,7 @@ string_t * string_new_nocopy(char *s)
 
 string_t * string_new_from_array(unsigned int n, const char *s[])
 {
-	size_t len[n], total_len = 0;
+	size_t len[n], total_len = 0, offset = 0;
 	unsigned int i;
 	char *buf;
 	string_t *string;
@@ -109,14 +109,17 @@ string_t * string_new_from_array(unsigned int n, const char *s[])
 		len[i] = strlen(s[i]);
 		total_len += len[i];
 	}
+
 	buf = malloc(sizeof(char) * (total_len + 1));
 	if (buf == NULL) {
 		object_throw_malloc_error(sizeof(char) * (total_len + 1));
 	}
 
 	strncpy(buf, s[0], len[0]+1);
+	offset = len[0];
 	for (i=1; i<n; i++) {
-		strncat(buf + len[i-1], s[i], len[i]);
+		strncat(buf + offset, s[i], len[i]);
+		offset += len[i];
 	}
 
 	string = string_new_nocopy(buf);
