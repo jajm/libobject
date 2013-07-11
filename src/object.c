@@ -34,7 +34,7 @@ object_t * object_new(const char *type, void *value)
 	return object;
 }
 
-const char * object_type(object_t *object)
+const char * object_type(const object_t *object)
 {
 	const char *type = NULL;
 
@@ -45,7 +45,7 @@ const char * object_type(object_t *object)
 	return type;
 }
 
-void * object_value(object_t *object)
+void * object_value(const object_t *object)
 {
 	void *value = NULL;
 
@@ -87,7 +87,7 @@ void object_unset(object_t *object, void *callback, void *callback_data)
 	}
 }
 
-int object_isset(object_t *object)
+int object_isset(const object_t *object)
 {
 	if (object != NULL && object->type != NULL && object->type[0] != '\0')
 		return 1;
@@ -95,7 +95,7 @@ int object_isset(object_t *object)
 	return 0;
 }
 
-int object_isa(object_t *object, const char *type)
+int object_isa(const object_t *object, const char *type)
 {
 	if (object_isset(object) && type != NULL && !strcmp(object->type, type))
 		return 1;

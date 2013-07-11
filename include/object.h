@@ -11,12 +11,12 @@ object_new(
 
 const char *
 object_type(
-	object_t *object
+	const object_t *object
 );
 
 void *
 object_value(
-	object_t *object
+	const object_t *object
 );
 
 int
@@ -35,12 +35,12 @@ object_unset(
 
 int
 object_isset(
-	object_t *object
+	const object_t *object
 );
 
 int
 object_isa(
-	object_t *object,
+	const object_t *object,
 	const char *type
 );
 

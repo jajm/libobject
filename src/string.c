@@ -124,7 +124,7 @@ string_t * string_new_from_array(unsigned int n, const char *s[])
 	return string;
 }
 
-const char * string_to_c_str(string_t *string)
+const char * string_to_c_str(const string_t *string)
 {
 	string_value_t *string_value = NULL;
 
@@ -134,7 +134,7 @@ const char * string_to_c_str(string_t *string)
 	return string_value->c_str;
 }
 
-size_t string_length(string_t *string)
+size_t string_length(const string_t *string)
 {
 	string_value_t *string_value = NULL;
 
@@ -144,13 +144,47 @@ size_t string_length(string_t *string)
 	return (string_value != NULL) ? string_value->len : 0;
 }
 
+int string_cat(string_t *dest, unsigned int n, const char *src[])
+{
+	size_t len[n], total_len = 0;
+	unsigned int i;
+	string_value_t *string_value;
+
+	for (i=0; i<n; i++) {
+		len[i] = strlen(src[i]);
+		total_len += len[i];
+	}
+
+	string_value = object_value(dest);
+	string_value->c_str = realloc(string_value->c_str,
+		string_value->len + total_len + 1);
+
+	for (i=0; i<n; i++) {
+		strcat(string_value->c_str, src[i]);
+	}
+
+	return total_len;
+}
+
+int string_scat(string_t *dest, unsigned int n, const string_t *src[])
+{
+	const char *s[n];
+	unsigned int i;
+
+	for (i=0; i<n; i++) {
+		s[i] = string_to_c_str(src[i]);
+	}
+
+	return string_cat(dest, n, s);
+}
+
 void string_free(string_t *string)
 {
 	assert_object_is_string(string);
 	object_free(string, string_value_free, NULL);
 }
 
-int object_is_string(object_t *object)
+int object_is_string(const object_t *object)
 {
 	if (object_isa(object, string_type))
 		return 1;

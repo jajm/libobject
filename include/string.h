@@ -28,12 +28,26 @@ string_new_from_array(
 
 const char *
 string_to_c_str(
-	string_t *string
+	const string_t *string
 );
 
 size_t
 string_length(
-	string_t *string
+	const string_t *string
+);
+
+int
+string_cat(
+	string_t *dest,
+	unsigned int n,
+	const char *src[]
+);
+
+int
+string_scat(
+	string_t *dest,
+	unsigned int n,
+	const string_t *src[]
 );
 
 void
@@ -43,7 +57,7 @@ string_free(
 
 int
 object_is_string(
-	object_t *object
+	const object_t *object
 );
 
 #endif /* ! object_string_h_included */
