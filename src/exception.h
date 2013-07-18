@@ -2,6 +2,7 @@
 #define object_exception_h_included
 
 #include <libexception/exception.h>
+#include "log.h"
 
 #define object_throw(exception, message, ...) do { \
 	log_fatal(message, ##__VA_ARGS__); \
