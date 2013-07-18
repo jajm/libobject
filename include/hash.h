@@ -13,32 +13,32 @@ hash_new(void);
 hash_t *
 hash_new_from_array(
 	unsigned int n,
-	object_t *objects[]
+	void *objects[]
 );
 
 #define hash(...) ({ \
-	object_t *__args[] = { __VA_ARGS__ }; \
+	void *__args[] = { __VA_ARGS__ }; \
 	hash_new_from_array(sizeof(__args) / sizeof(*__args), __args); \
 })
 
 int
 hash_set(
 	hash_t *hash,
-	string_t *key,
+	const char *key,
 	object_t *value
 );
 
 int
 hash_unset(
 	hash_t *hash,
-	string_t *key,
+	const char *key,
 	void *callback
 );
 
 object_t *
 hash_get(
 	hash_t *hash,
-	string_t *key
+	const char *key
 );
 
 array_t *

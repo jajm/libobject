@@ -10,28 +10,21 @@
 
 #define HASH_SIZE 512
 
-unsigned int hash_hash_callback(string_t *string, unsigned int size)
+unsigned int hash_hash_callback(const char *key, unsigned int size)
 {
-	const char *s;
 	unsigned int hash = 0, i;
 
-	s = string_to_c_str(string);
-	for (i=0; s[i] != '\0'; i++) {
-		hash += s[i] * i;
+	for (i=0; key[i] != '\0'; i++) {
+		hash += key[i] * i;
 	}
 	hash %= size;
 
 	return hash;
 }
 
-int hash_cmpkey_callback(string_t *string1, string_t *string2)
+int hash_cmpkey_callback(const char *key1, const char *key2)
 {
-	const char *s1, *s2;
-
-	s1 = string_to_c_str(string1);
-	s2 = string_to_c_str(string2);
-
-	return strcmp(s1, s2);
+	return strcmp(key1, key2);
 }
 
 static const char hash_type[] = "HASH";
@@ -53,14 +46,14 @@ hash_t * hash_new(void)
 	return hash;
 }
 
-hash_t * hash_new_from_array(unsigned int n, object_t *objects[])
+hash_t * hash_new_from_array(unsigned int n, void *objects[])
 {
 	hash_t *hash;
 	unsigned int i;
 
 	hash = hash_new();
 	for (i=1; i<n; i+=2) {
-		string_t *key = objects[i-1];
+		const char *key = objects[i-1];
 		object_t *value = objects[i];
 		hash_set(hash, key, value);
 	}
@@ -68,28 +61,37 @@ hash_t * hash_new_from_array(unsigned int n, object_t *objects[])
 	return hash;
 }
 
-int hash_set(hash_t *hash, string_t *key, object_t *value)
+int hash_set(hash_t *hash, const char *key, object_t *value)
 {
 	gds_hash_map_t *gds_hash_map;
+	char *k;
+	size_t len;
 
 	assert_object_is_hash(hash);
 
+	len = strlen(key);
+	k = malloc(sizeof(char) * (len+1));
+	if (k == NULL) {
+		object_throw_malloc_error(sizeof(char) * (len+1));
+	}
+	strncpy(k, key, len+1);
+
 	gds_hash_map = object_value(hash);
-	return gds_hash_map_set(gds_hash_map, key, value, NULL);
+	return gds_hash_map_set(gds_hash_map, k, value, NULL);
 }
 
-int hash_unset(hash_t *hash, string_t *key, void *callback)
+int hash_unset(hash_t *hash, const char *key, void *callback)
 {
 	gds_hash_map_t *gds_hash_map;
 
 	assert_object_is_hash(hash);
 
 	gds_hash_map = object_value(hash);
-	return gds_hash_map_unset(gds_hash_map, key, (gds_free_cb) string_free,
+	return gds_hash_map_unset(gds_hash_map, key, (gds_free_cb) free,
 		(gds_free_cb) callback);
 }
 
-object_t * hash_get(hash_t *hash, string_t *key)
+object_t * hash_get(hash_t *hash, const char *key)
 {
 	gds_hash_map_t *gds_hash_map;
 
@@ -104,7 +106,7 @@ array_t * hash_keys(hash_t *hash)
 {
 	gds_hash_map_t *gds_hash_map;
 	gds_slist_t *gds_keys;
-	string_t *key;
+	char *key;
 	array_t *keys;
 
 	assert_object_is_hash(hash);
@@ -113,7 +115,7 @@ array_t * hash_keys(hash_t *hash)
 	gds_keys = gds_hash_map_keys(gds_hash_map);
 	keys = array();
 	gds_slist_foreach(key, gds_keys) {
-		array_push(keys, key);
+		array_push(keys, string(key));
 	}
 	gds_slist_free(gds_keys, NULL, NULL);
 
@@ -147,7 +149,7 @@ void hash_free(hash_t *hash, void *callback)
 	assert_object_is_hash(hash);
 
 	gds_hash_map = object_value(hash);
-	gds_hash_map_free(gds_hash_map, (gds_free_cb) string_free,
+	gds_hash_map_free(gds_hash_map, (gds_free_cb) free,
 		(gds_free_cb) callback);
 	object_free(hash, NULL, NULL);
 }

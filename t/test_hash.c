@@ -10,18 +10,16 @@ int main()
 
 	hash = hash_new();
 
-	hash_set(hash, string("clé"), string("valeur"));
-	string_t *key = string("clé");
-	object_t *value = hash_get(hash, key);
-	string_free(key);
+	hash_set(hash, "clé", string("valeur"));
+	object_t *value = hash_get(hash, "clé");
 	printf("%s\n", string_to_c_str(value));
 
 	hash_free(hash, string_free);
 
 	hash = hash(
-		string("clé 1"), string("valeur 1"),
-		string("clé 2"), string("valeur 2"),
-		string("clé 3"), string("valeur 3")
+		"clé 1", string("valeur 1"),
+		"clé 2", string("valeur 2"),
+		"clé 3", string("valeur 3")
 	);
 
 	array_t *keys = hash_keys(hash);
@@ -29,7 +27,7 @@ int main()
 	array_foreach(keys, key) {
 		printf("%s\n", string_to_c_str(key));
 	}
-	array_free(keys, NULL, NULL);
+	array_free(keys, string_free, NULL);
 
 	array_t *values = hash_values(hash);
 	printf("Values:\n");
