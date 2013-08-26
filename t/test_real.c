@@ -1,16 +1,23 @@
 #include <stdio.h>
 #include "real.h"
+#include "type.h"
+#include "tap.h"
 
 int main()
 {
-	real_t *d;
+	real_t *r;
 
-	d = real_new(42.42);
-	printf("42.42 = %lf\n", real_get(d));
-	real_set(d, 21.000001);
-	printf("21.000001 = %lf\n", real_get(d));
-	printf("is_real = %d\n", object_is_real(d));
-	real_free(d);
+	plan(3);
+
+	r = real_new(42.42);
+	ok(42.42 == real_get(r), "real_get(real_new(42.42)) == 42.42");
+	real_set(r, 21.000001);
+	ok(21.000001 == real_get(r), "real_set(r, 21.000001); real_get(r) == 21.000001");
+	ok(object_is_real(r), "object_is_real(r)");
+
+	real_free(r);
+
+	types_finalize();
 
 	return 0;
 }

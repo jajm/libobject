@@ -3,18 +3,24 @@
 #include "object.h"
 #include "array_iterator.h"
 #include "hash.h"
+#include "type.h"
+#include "tap.h"
 
 int main()
 {
 	hash_t *hash;
 
+	plan(7);
+
 	hash = hash_new();
+	ok(object_is_hash(hash), "object is hash");
 
 	hash_set(hash, "clé", string("valeur"));
 	object_t *value = hash_get(hash, "clé");
-	printf("%s\n", string_to_c_str(value));
+	ok(object_is_string(value), "hash[\"clé\"] is string");
+	str_eq(string_to_c_str(value), "valeur");
 
-	hash_free(hash, string_free);
+	hash_free(hash);
 
 	hash = hash(
 		"clé 1", string("valeur 1"),
@@ -23,20 +29,18 @@ int main()
 	);
 
 	array_t *keys = hash_keys(hash);
-	printf("Keys:\n");
-	array_foreach(keys, key) {
-		printf("%s\n", string_to_c_str(key));
-	}
-	array_free(keys, string_free, NULL);
+	ok(object_is_array(keys), "hash_keys() returns array");
+	ok(array_size(keys) == 3, "hash has 3 keys");
+	array_free(keys);
 
 	array_t *values = hash_values(hash);
-	printf("Values:\n");
-	array_foreach(values, value) {
-		printf("%s\n", string_to_c_str(value));
-	}
-	array_free(values, NULL, NULL);
+	ok(object_is_array(values), "hash_values() returns array");
+	ok(array_size(values) == 3, "hash has 3 values");
+	array_free(values);
 
-	hash_free(hash, string_free);
+	hash_free(hash);
+
+	types_finalize();
 
 	return 0;
 }

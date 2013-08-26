@@ -4,17 +4,8 @@
 #include "array.h"
 #include "array_iterator.h"
 #include "string.h"
-
-int tests_failed = 0;
-
-#define ok(test) \
-	if (!(test)) { \
-		tests_failed ++; \
-		printf("Test failed at line %d: %s\n", __LINE__, #test); \
-	}
-
-#define str_eq(got, expected) \
-	ok(strcmp(string_to_c_str(got), expected) == 0)
+#include "type.h"
+#include "tap.h"
 
 int main()
 {
@@ -22,51 +13,51 @@ int main()
 	string_t *s;
 	int i = 0;
 
+	plan(14);
+
 	a = array();
-	ok(object_is_array(a));
-	ok(array_size(a) == 0);
+	ok(object_is_array(a), "object is array");
+	ok(array_size(a) == 0, "array has 0 elements");
 
 	array_push(a, string("one"));
 	array_push(a, string("two"));
-	ok(array_size(a) == 2);
+	ok(array_size(a) == 2, "array has 2 elements");
 
 	array_unshift(a, string("zero"));
-	ok(array_size(a) == 3);
+	ok(array_size(a) == 3, "array has 3 elements");
 
 	array_foreach(a, o) {
-		if (i == 0) { str_eq(o, "zero"); }
-		else if (i == 1) { str_eq(o, "one"); }
-		else if (i == 2) { str_eq(o, "two"); }
+		if (i == 0) { str_eq(string_to_c_str(o), "zero"); }
+		else if (i == 1) { str_eq(string_to_c_str(o), "one"); }
+		else if (i == 2) { str_eq(string_to_c_str(o), "two"); }
 		i++;
 	}
 
 	s = array_pop(a);
-	str_eq(s, "two");
+	str_eq(string_to_c_str(s), "two");
 	string_free(s);
-	ok(array_size(a) == 2);
+	ok(array_size(a) == 2, "array has 2 elements");
 
 	s = array_shift(a);
-	str_eq(s, "zero");
+	str_eq(string_to_c_str(s), "zero");
 	string_free(s);
-	ok(array_size(a) == 1);
+	ok(array_size(a) == 1, "array has 1 element");
 
-	array_free(a, string_free, NULL);
+	array_free(a);
 
-	a = object_new("", NULL);
-	ok(!object_is_array(a));
-	object_free(a, NULL, NULL);
+	a = object_new(NULL, NULL);
+	ok(!object_is_array(a), "object is not an array");
+	object_free(a);
 
 	a = object_new("array", NULL);
-	ok(!object_is_array(a));
-	object_free(a, NULL, NULL);
+	ok(!object_is_array(a), "object is not an array");
+	object_free(a);
 
 	a = object_new("ARRAY", NULL);
-	ok(object_is_array(a));
-	array_free(a, NULL, NULL);
+	ok(object_is_array(a), "object is array");
+	array_free(a);
 
-	if (tests_failed == 0) {
-		printf("All tests pass!\n");
-	}
+	types_finalize();
 
-	return tests_failed;
+	return 0;
 }

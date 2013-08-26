@@ -4,11 +4,11 @@ include ../config.mk
 CFLAGS := -Wall -Wextra -Werror -g -std=c99 $(CFLAGS)
 CPPFLAGS := -iquote ../include $(CPPFLAGS)
 
-PROGRAMS := $(patsubst %.c,%,$(wildcard *.c))
+PROGRAMS := $(patsubst %.c,%.t,$(wildcard *.c))
 
 all: $(PROGRAMS)
 
-$(PROGRAMS): % : %.o ../src/$(LIBRARY_NAME)
+$(PROGRAMS): %.t: %.o ../src/$(LIBRARY_NAME)
 	$(LIBTOOL) --mode=link $(CC) -o $@ $^
 
 %.o: %.c

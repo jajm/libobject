@@ -2,56 +2,37 @@
 #include <stdlib.h>
 #include <string.h>
 #include "object.h"
-
-int tests_failed = 0;
-
-#define ok(test) \
-	if (!(test)) { \
-		tests_failed ++; \
-		printf("Test failed at line %d: %s\n", __LINE__, #test); \
-	}
-
-#define str_eq(got, expected) \
-	ok(strcmp(got, expected) == 0)
+#include "type.h"
+#include "tap.h"
 
 int main()
 {
 	object_t *o;
-	char *s = "Hello, object world";
-	char *s2 = "Hello again, world";
+	char *s;
 	const char *string_type = "STRING";
-	const char *string_type2 = "string";
+	type_t *type;
+
+	plan(8);
+	
+	type = type_get(string_type);
+	type_set_callback(type, "free", free);
+
+	s = calloc(20, sizeof(char));
+	strcpy(s, "Hello, object world");
 
 	o = object_new(string_type, s);
-	ok(o != NULL);
-	ok(object_isset(o));
-	ok(object_isa(o, string_type));
+	ok(o != NULL, "object is not NULL");
+	ok(object_isset(o), "object is set");
+	ok(object_isa(o, string_type), "object isa '%s'", string_type);
 	str_eq(object_type(o), string_type);
-	ok(object_type(o) != string_type);
+	ok(object_type(o) == string_type, "object_type() returns direct pointer to type string");
 	str_eq(object_value(o), s);
-	ok(object_value(o) == s);
+	ok(object_value(o) == s, "object_value() returns direct pointer to value");
 
-	ok(0 == object_set(o, string_type2, s2));
-	ok(object_isset(o));
-	ok(object_isa(o, string_type2));
-	str_eq(object_type(o), string_type2);
-	ok(object_type(o) != string_type2);
-	str_eq(object_value(o), s2);
-	ok(object_value(o) == s2);
+	object_free(o);
+	ok(object_isset(NULL) == 0, "NULL is considered as an unset object");
 
-	object_unset(o, NULL, NULL);
-	ok(object_isset(o) == 0);
-	ok(object_isa(o, string_type2) == 0);
-	str_eq(object_type(o), "");
-	ok(object_value(o) == NULL);
+	types_finalize();
 
-	object_free(o, NULL, NULL);
-	ok(object_isset(NULL) == 0);
-	ok(object_isa(o, string_type2) == 0);
-
-	if (tests_failed == 0) {
-		printf("All tests pass!\n");
-	}
-
-	return tests_failed;
+	return 0;
 }
