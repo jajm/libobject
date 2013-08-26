@@ -1,7 +1,9 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <libgends/dlist.h>
 #include "log.h"
 #include "exception.h"
+#include "type.h"
 #include "object.h"
 #include "array.h"
 
@@ -11,9 +13,31 @@ static const char array_type[] = "ARRAY";
 	if (!object_is_array(object)) \
 		object_throw_bad_type(object, array_type);
 
+void array_free_callback(gds_dlist_t *list)
+{
+	gds_dlist_free(list, object_free, NULL);
+}
+
+static _Bool array_type_registered = false;
+
+void array_type_register(void)
+{
+	type_t *type;
+
+	if (!array_type_registered) {
+		type = type_get(array_type);
+		type_set_callback(type, "free", array_free_callback);
+		array_type_registered = true;
+	}
+}
+
 array_t * array_new(unsigned int size, object_t *objects[])
 {
-	gds_dlist_t *list = gds_dlist_new_from_array(size, (void **)objects);
+	gds_dlist_t *list;
+
+	array_type_register();
+
+	list = gds_dlist_new_from_array(size, (void **)objects);
 	if (list == NULL) {
 		log_error("List creation failed");
 		return NULL;
@@ -79,6 +103,7 @@ array_t * array_slice(array_t *array, unsigned int offset, unsigned int length,
 
 	slice = gds_dlist_slice(object_value(array), offset, length, callback,
 		callback_data);
+
 	return object_new(array_type, slice);
 }
 
@@ -113,12 +138,11 @@ unsigned int array_size(array_t *array)
 	return gds_dlist_size(object_value(array));
 }
 
-void array_free(array_t *array, void *callback, void *callback_data)
+void array_free(array_t *array)
 {
 	assert_object_is_array(array);
 
-	gds_dlist_free(object_value(array), callback, callback_data);
-	object_free(array, NULL, NULL);
+	object_free(array);
 }
 
 int object_is_array(object_t *object)

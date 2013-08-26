@@ -31,8 +31,7 @@ hash_set(
 int
 hash_unset(
 	hash_t *hash,
-	const char *key,
-	void *callback
+	const char *key
 );
 
 object_t *
@@ -53,8 +52,7 @@ hash_values(
 
 void
 hash_free(
-	hash_t *hash,
-	void *callback
+	hash_t *hash
 );
 
 int

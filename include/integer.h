@@ -11,6 +11,9 @@ integer_new(
 	integer_int_t value
 );
 
+#define integer(value) \
+	integer_new(value)
+
 void
 integer_set(
 	integer_t *integer,

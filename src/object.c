@@ -1,45 +1,70 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <libexception/exception.h>
 #include "log.h"
 #include "exception.h"
+#include "type.h"
+#include "malloc.h"
 #include "object.h"
 
 struct object_s {
-	char *type;
+	type_t *type;
 	void *value;
+	_Bool is_ref;
 };
 
 object_t * object_new(const char *type, void *value)
 {
-	object_t *object;
+	object_t *object = NULL;
 
 	if (type == NULL) {
 		log_error("type cannot be NULL");
 		return NULL;
 	}
 
-	object = malloc(sizeof(object_t));
-	if (object == NULL) {
-		object_throw_malloc_error(sizeof(object_t));
-	}
+	object = object_malloc(sizeof(object_t));
 
-	object->type = NULL;
-	if(0 > object_set(object, type, value)) {
-		free(object);
-		return NULL;
-	}
+	object->type = type_get(type);
+	object->value = value;
+	object->is_ref = false;
 
 	return object;
+}
+
+object_t * object_new_ref(const char *type, void *value)
+{
+	object_t *ref;
+
+	ref = object_malloc(sizeof(object_t));
+
+	ref->type = type_get(type);
+	ref->value = value;
+	ref->is_ref = true;
+
+	return ref;
+}
+
+object_t * object_get_ref(object_t *object)
+{
+	object_t *ref;
+
+	ref = object_malloc(sizeof(object_t));
+
+	ref->type = object->type;
+	ref->value = object->value;
+	ref->is_ref = true;
+
+	return ref;
 }
 
 const char * object_type(const object_t *object)
 {
 	const char *type = NULL;
 
-	if (object != NULL) {
-		type = object->type;
+	if (object_isset(object)) {
+		type = type_name(object->type);
 	}
 
 	return type;
@@ -56,62 +81,41 @@ void * object_value(const object_t *object)
 	return value;
 }
 
-int object_set(object_t *object, const char *type, void *value)
-{
-	size_t length;
-
-	if (object != NULL) {
-		length = strlen(type);
-		free(object->type);
-		object->type = malloc(sizeof(char) * (length+1));
-		if (object->type == NULL) {
-			object_throw_malloc_error(sizeof(char) * (length+1));
-		}
-
-		strncpy(object->type, type, length+1);
-		object->value = value;
-	}
-
-	return 0;
-}
-
-void object_unset(object_t *object, void *callback, void *callback_data)
-{
-	void (*cb)(void *, void *) = callback;
-
-	if (object != NULL) {
-		if (cb != NULL) {
-			cb(object->value, callback_data);
-		}
-		object_set(object, "", NULL);
-	}
-}
-
 int object_isset(const object_t *object)
 {
-	if (object != NULL && object->type != NULL && object->type[0] != '\0')
+	if (object != NULL && object->type != NULL)
 		return 1;
-	
+
 	return 0;
 }
 
 int object_isa(const object_t *object, const char *type)
 {
-	if (object_isset(object) && type != NULL && !strcmp(object->type, type))
-		return 1;
-	
+	const char *typename;
+
+	if (object_isset(object)) {
+		typename = type_name(object->type);
+		if (type == typename || !strcmp(typename, type))
+			return 1;
+	}
+
 	return 0;
 }
 
-void object_free(object_t *object, void *callback, void *callback_data)
+void object_free_value(object_t *object)
 {
-	void (*cb)(void *, void *) = callback;
+	void (*free_callback)(void *);
 
-	if (object != NULL) {
-		if (cb != NULL) {
-			cb(object->value, callback_data);
-		}
-		free(object->type);
-		free(object);
+	free_callback = type_get_callback(object->type, "free");
+	if (free_callback != NULL) {
+		free_callback(object->value);
 	}
+}
+
+void object_free(object_t *object)
+{
+	if (object_isset(object) && !object->is_ref) {
+		object_free_value(object);
+	}
+	free(object);
 }

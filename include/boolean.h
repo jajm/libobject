@@ -11,6 +11,9 @@ boolean_new(
 	_Bool value
 );
 
+#define boolean(value) \
+	boolean_new(value)
+
 _Bool
 boolean_get(
 	boolean_t *boolean

@@ -3,6 +3,7 @@
 #include <libgends/undefined.h>
 #include <libgends/iterator.h>
 #include <libgends/dlist.h>
+#include "malloc.h"
 #include "object.h"
 #include "array.h"
 #include "array_iterator.h"
@@ -20,11 +21,7 @@ array_iterator_t * array_iterator_new(object_t *object)
 		return NULL;
 	}
 
-	array_iterator = malloc(sizeof(array_iterator_t));
-	if (array_iterator == NULL) {
-		fprintf(stderr, "Memory allocation error\n");
-		return NULL;
-	}
+	array_iterator = object_malloc(sizeof(array_iterator_t));
 
 	array_iterator->object = object;
 	array_iterator->iterator = gds_dlist_iterator_new(object_value(object));

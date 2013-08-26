@@ -1,6 +1,8 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "exception.h"
+#include "type.h"
 #include "object.h"
 #include "boolean.h"
 
@@ -10,15 +12,26 @@ static const char boolean_type[] = "BOOLEAN";
 	if (!object_is_boolean(object)) \
 		object_throw_bad_type(object, boolean_type)
 
+static _Bool boolean_type_registered = false;
+
+void boolean_type_register(void)
+{
+	if (!boolean_type_registered) {
+		type_get(boolean_type);
+		boolean_type_registered = true;
+	}
+}
+
+static _Bool boolean_true = true;
+static _Bool boolean_false = false;
+
 boolean_t * boolean_new(_Bool value)
 {
 	_Bool *value_p;
 
-	value_p = malloc(sizeof(_Bool));
-	if (value_p == NULL) {
-		object_throw_malloc_error(sizeof(_Bool));
-	}
-	*value_p = value;
+	boolean_type_register();
+
+	value_p = value ? &boolean_true : &boolean_false;
 
 	return object_new(boolean_type, value_p);
 }
@@ -45,9 +58,8 @@ void boolean_set(boolean_t *boolean, _Bool value)
 
 void boolean_free(boolean_t *boolean)
 {
-	if (object_is_boolean(boolean)) {
-		object_free(boolean, free, NULL);
-	}
+	assert_object_is_boolean(boolean);
+	object_free(boolean);
 }
 
 int object_is_boolean(object_t *object)

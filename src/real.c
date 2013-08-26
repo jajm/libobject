@@ -1,6 +1,9 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "exception.h"
+#include "type.h"
+#include "malloc.h"
 #include "object.h"
 #include "real.h"
 
@@ -10,18 +13,31 @@ static const char real_type[] = "REAL";
 	if (!object_is_real(object)) \
 		object_throw_bad_type(object, real_type)
 
+static _Bool real_type_registered = false;
+
+void real_type_register(void)
+{
+	type_t *type;
+
+	if (!real_type_registered) {
+		type = type_get(real_type);
+		type_set_callback(type, "free", free);
+		real_type_registered = true;
+	}
+}
+
 real_t * real_new(double value)
 {
 	real_t *real;
 	double *value_p;
 
-	value_p = malloc(sizeof(double));
-	if (value_p == NULL) {
-		object_throw_malloc_error(sizeof(double));
-	}
+	real_type_register();
+
+	value_p = object_malloc(sizeof(double));
 	*value_p = value;
 
 	real = object_new(real_type, value_p);
+
 	return real;
 }
 
@@ -47,9 +63,8 @@ double real_get(real_t *real)
 
 void real_free(real_t *real)
 {
-	if (object_is_real(real)) {
-		object_free(real, free, NULL);
-	}
+	assert_object_is_real(real);
+	object_free(real);
 }
 
 int object_is_real(object_t *object)

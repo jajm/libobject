@@ -7,12 +7,12 @@ typedef object_t string_t;
 
 string_t *
 string_new(
-	const char *s
+	char *s
 );
 
 string_t *
-string_new_nocopy(
-	char *s
+string_new_static(
+	const char *s
 );
 
 string_t *

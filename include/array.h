@@ -89,11 +89,8 @@ array_size(
 	array_t *array
 );
 
-void
-array_free(
-	array_t *array,
-	void *callback,
-	void *callback_data
+void array_free(
+	array_t *array
 );
 
 int

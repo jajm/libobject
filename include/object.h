@@ -9,6 +9,17 @@ object_new(
 	void *value
 );
 
+object_t *
+object_new_ref(
+	const char *type,
+	void *value
+);
+
+object_t *
+object_get_ref(
+	object_t *object
+);
+
 const char *
 object_type(
 	const object_t *object
@@ -17,20 +28,6 @@ object_type(
 void *
 object_value(
 	const object_t *object
-);
-
-int
-object_set(
-	object_t *object,
-	const char *type,
-	void *value
-);
-
-void
-object_unset(
-	object_t *object,
-	void *callback,
-	void *callback_data
 );
 
 int
@@ -46,9 +43,7 @@ object_isa(
 
 void
 object_free(
-	object_t *object,
-	void *callback,
-	void *callback_data
+	object_t *object
 );
 
 #endif /* ! object_object_h_included */

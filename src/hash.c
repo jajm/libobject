@@ -4,6 +4,8 @@
 #include <libgends/hash_map.h>
 #include "log.h"
 #include "exception.h"
+#include "type.h"
+#include "malloc.h"
 #include "object.h"
 #include "array.h"
 #include "hash.h"
@@ -33,10 +35,30 @@ static const char hash_type[] = "HASH";
 	if (!object_is_hash(object)) \
 		object_throw_bad_type(object, hash_type)
 
+void hash_free_callback(gds_hash_map_t *gds_hash_map)
+{
+	gds_hash_map_free(gds_hash_map, free, (gds_free_cb) object_free);
+}
+
+static _Bool hash_type_registered = false;
+
+void hash_type_register(void)
+{
+	type_t *type;
+
+	if (!hash_type_registered) {
+		type = type_get(hash_type);
+		type_set_callback(type, "free", hash_free_callback);
+		hash_type_registered = true;
+	}
+}
+
 hash_t * hash_new(void)
 {
 	hash_t *hash;
 	gds_hash_map_t *gds_hash_map;
+
+	hash_type_register();
 
 	gds_hash_map = gds_hash_map_new(HASH_SIZE,
 		(gds_hash_cb) hash_hash_callback,
@@ -70,17 +92,14 @@ int hash_set(hash_t *hash, const char *key, object_t *value)
 	assert_object_is_hash(hash);
 
 	len = strlen(key);
-	k = malloc(sizeof(char) * (len+1));
-	if (k == NULL) {
-		object_throw_malloc_error(sizeof(char) * (len+1));
-	}
+	k = object_malloc(sizeof(char) * (len+1));
 	strncpy(k, key, len+1);
 
 	gds_hash_map = object_value(hash);
 	return gds_hash_map_set(gds_hash_map, k, value, NULL);
 }
 
-int hash_unset(hash_t *hash, const char *key, void *callback)
+int hash_unset(hash_t *hash, const char *key)
 {
 	gds_hash_map_t *gds_hash_map;
 
@@ -88,7 +107,7 @@ int hash_unset(hash_t *hash, const char *key, void *callback)
 
 	gds_hash_map = object_value(hash);
 	return gds_hash_map_unset(gds_hash_map, key, (gds_free_cb) free,
-		(gds_free_cb) callback);
+		(gds_free_cb) object_free);
 }
 
 object_t * hash_get(hash_t *hash, const char *key)
@@ -135,23 +154,18 @@ array_t * hash_values(hash_t *hash)
 	gds_values = gds_hash_map_values(gds_hash_map);
 	values = array();
 	gds_slist_foreach(value, gds_values) {
-		array_push(values, value);
+		array_push(values, object_get_ref(value));
 	}
 	gds_slist_free(gds_values, NULL, NULL);
 
 	return values;
 }
 
-void hash_free(hash_t *hash, void *callback)
+void hash_free(hash_t *hash)
 {
-	gds_hash_map_t *gds_hash_map;
-
 	assert_object_is_hash(hash);
 
-	gds_hash_map = object_value(hash);
-	gds_hash_map_free(gds_hash_map, (gds_free_cb) free,
-		(gds_free_cb) callback);
-	object_free(hash, NULL, NULL);
+	object_free(hash);
 }
 
 int object_is_hash(object_t *object)
