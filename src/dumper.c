@@ -9,55 +9,73 @@
 #include "string.h"
 #include "dumper.h"
 
-void object_dump_object(object_t *object, unsigned int indent, _Bool hash_value)
+void object_dump_into_string(string_t *dump, object_t *object,
+	unsigned int indent, _Bool hash_value)
 {
+	char buffer[32];
+
 	if (!hash_value) {
 		for (unsigned int i = 0; i < indent; i++) {
-			printf(" ");
+			string_cat(dump, " ");
 		}
 	}
-	if (object_is_array(object)) {
-		printf("array(\n");
+	if (!object_isset(object)) {
+		string_cat(dump, "null()");
+	} else if (object_is_array(object)) {
+		string_cat(dump, "array(\n");
 		array_foreach(object, o) {
-			object_dump_object(o, indent+2, false);
-			printf(",\n");
+			object_dump_into_string(dump, o, indent+2, false);
+			string_cat(dump, ",\n");
 		}
 		for (unsigned int i = 0; i < indent; i++) {
-			printf(" ");
+			string_cat(dump, " ");
 		}
-		printf(")");
+		string_cat(dump, ")");
 	} else if (object_is_hash(object)) {
-		printf("hash(\n");
+		string_cat(dump, "hash(\n");
 		array_t *keys = hash_keys(object);
 		array_foreach(keys, key) {
 			const char *k = string_to_c_str(key);
 			object_t *o = hash_get(object, k);
-			object_dump_object(key, indent+2, false);
-			printf(", ");
-			object_dump_object(o, indent+2, true);
-			printf(",\n");
+			for (unsigned int i = 0; i < indent+2; i++) {
+				string_cat(dump, " ");
+			}
+			string_cat(dump, "\"", k, "\"", ", ");
+			object_dump_into_string(dump, o, indent+2, true);
+			string_cat(dump, ",\n");
 		}
-		array_free(keys, string_free, NULL);
+		array_free(keys);
 		for (unsigned int i = 0; i < indent; i++) {
-			printf(" ");
+			string_cat(dump, " ");
 		}
-		printf(")");
+		string_cat(dump, ")");
 	} else if (object_is_integer(object)) {
-		printf("%d", integer_get(object));
+		sprintf(buffer, "integer(%d)", integer_get(object));
+		string_cat(dump, buffer);
 	} else if (object_is_real(object)) {
-		printf("%lf", real_get(object));
+		sprintf(buffer, "real(%lf)", real_get(object));
+		string_cat(dump, buffer);
 	} else if (object_is_boolean(object)) {
-		printf("%s", boolean_get(object) ? "true" : "false");
+		if (boolean_get(object)) {
+			string_cat(dump, "boolean(true)");
+		} else {
+			string_cat(dump, "boolean(false)");
+		}
 	} else if (object_is_string(object)) {
-		printf("\"%s\"", string_to_c_str(object));
+		string_cat(dump, "string(\"", string_to_c_str(object), "\")");
 	} else {
-		printf("UNKNOWN TYPE (%s)", object_type(object));
+		string_cat(dump, "UNKNOWN TYPE (", object_type(object), ")");
 	}
 }
 
-void object_dump(object_t *object, const char *name)
+string_t * object_dump(object_t *object, const char *name)
 {
-	printf("%s = ", name);
-	object_dump_object(object, 0, false);
-	printf(";\n");
+	string_t *dump;
+
+	dump = string("");
+	string_cat(dump, name, " = ");
+	object_dump_into_string(dump, object, 0, false);
+	string_cat(dump, ";");
+
+	return dump;
 }
