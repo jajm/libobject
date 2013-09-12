@@ -30,6 +30,11 @@ object_value(
 	const object_t *object
 );
 
+void object_set(
+	object_t *object,
+	void *value
+);
+
 int
 object_isset(
 	const object_t *object

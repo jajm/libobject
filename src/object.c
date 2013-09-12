@@ -81,6 +81,13 @@ void * object_value(const object_t *object)
 	return value;
 }
 
+void object_set(object_t *object, void *value)
+{
+	if (object != NULL) {
+		object->value = value;
+	}
+}
+
 int object_isset(const object_t *object)
 {
 	if (object != NULL && object->type != NULL)

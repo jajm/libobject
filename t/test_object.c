@@ -12,7 +12,7 @@ int main()
 	const char *string_type = "STRING";
 	type_t *type;
 
-	plan(8);
+	plan(9);
 	
 	type = type_get(string_type);
 	type_set_callback(type, "free", free);
@@ -28,6 +28,10 @@ int main()
 	ok(object_type(o) == string_type, "object_type() returns direct pointer to type string");
 	str_eq(object_value(o), s);
 	ok(object_value(o) == s, "object_value() returns direct pointer to value");
+
+	object_set(o, "Goodbye");
+	str_eq(object_value(o), "Goodbye");
+	object_set(o, s);
 
 	object_free(o);
 	ok(object_isset(NULL) == 0, "NULL is considered as an unset object");
