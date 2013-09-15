@@ -1,6 +1,7 @@
 #ifndef object_string_h_included
 #define object_string_h_included
 
+#include <stdlib.h>
 #include "object.h"
 
 typedef object_t string_t;
