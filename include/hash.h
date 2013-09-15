@@ -36,18 +36,18 @@ hash_unset(
 
 object_t *
 hash_get(
-	hash_t *hash,
+	const hash_t *hash,
 	const char *key
 );
 
 array_t *
 hash_keys(
-	hash_t *hash
+	const hash_t *hash
 );
 
 array_t *
 hash_values(
-	hash_t *hash
+	const hash_t *hash
 );
 
 void
@@ -57,7 +57,7 @@ hash_free(
 
 int
 object_is_hash(
-	object_t *object
+	const object_t *object
 );
 
 #endif /* ! object_hash_h_included */

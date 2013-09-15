@@ -51,7 +51,7 @@ void integer_set(integer_t *integer, integer_int_t value)
 	*value_p = value;
 }
 
-integer_int_t integer_get(integer_t *integer)
+integer_int_t integer_get(const integer_t *integer)
 {
 	integer_int_t *value_p;
 
@@ -67,7 +67,7 @@ void integer_free(integer_t *integer)
 	object_free(integer);
 }
 
-int object_is_integer(object_t *object)
+int object_is_integer(const object_t *object)
 {
 	if (object_isa(object, integer_type))
 		return 1;

@@ -21,7 +21,7 @@ real_set(
 
 double
 real_get(
-	real_t *real
+	const real_t *real
 );
 
 void
@@ -31,7 +31,7 @@ real_free(
 
 int
 object_is_real(
-	object_t *object
+	const object_t *object
 );
 
 #endif /* ! object_real_h_included */

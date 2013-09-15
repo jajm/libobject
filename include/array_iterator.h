@@ -5,7 +5,7 @@ typedef struct array_iterator_s array_iterator_t;
 
 array_iterator_t *
 array_iterator_new(
-	object_t *object
+	const object_t *object
 );
 
 int

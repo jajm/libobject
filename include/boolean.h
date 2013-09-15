@@ -16,7 +16,7 @@ boolean_new(
 
 _Bool
 boolean_get(
-	boolean_t *boolean
+	const boolean_t *boolean
 );
 
 void
@@ -32,7 +32,7 @@ boolean_free(
 
 int
 object_is_boolean(
-	object_t *object
+	const object_t *object
 );
 
 #endif /* ! object_boolean_h_included */

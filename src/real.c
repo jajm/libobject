@@ -51,7 +51,7 @@ void real_set(real_t *real, double value)
 	*value_p = value;
 }
 
-double real_get(real_t *real)
+double real_get(const real_t *real)
 {
 	double *value_p;
 
@@ -67,7 +67,7 @@ void real_free(real_t *real)
 	object_free(real);
 }
 
-int object_is_real(object_t *object)
+int object_is_real(const object_t *object)
 {
 	if (object_isa(object, real_type))
 		return 1;

@@ -40,7 +40,7 @@ array_shift(
 
 object_t *
 array_get(
-	array_t *array,
+	const array_t *array,
 	unsigned int offset
 );
 
@@ -56,7 +56,7 @@ array_splice(
 
 array_t *
 array_slice(
-	array_t *array,
+	const array_t *array,
 	unsigned int offset,
 	unsigned int length,
 	void *callback,
@@ -72,21 +72,21 @@ array_map(
 
 array_t *
 array_filter(
-	array_t *array,
+	const array_t *array,
 	void *callback,
 	void *callback_data
 );
 
 object_t *
 array_reduce(
-	array_t *array,
+	const array_t *array,
 	void *callback,
 	void *callback_data
 );
 
 unsigned int
 array_size(
-	array_t *array
+	const array_t *array
 );
 
 void array_free(
@@ -95,7 +95,7 @@ void array_free(
 
 int
 object_is_array(
-	object_t *object
+	const object_t *object
 );
 
 #endif /* ! object_array_h_included */

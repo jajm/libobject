@@ -22,7 +22,7 @@ integer_set(
 
 integer_int_t
 integer_get(
-	integer_t *integer
+	const integer_t *integer
 );
 
 void
@@ -32,7 +32,7 @@ integer_free(
 
 int
 object_is_integer(
-	object_t *object
+	const object_t *object
 );
 
 #endif /* ! object_integer_h_included */

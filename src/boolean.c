@@ -36,7 +36,7 @@ boolean_t * boolean_new(_Bool value)
 	return object_new(boolean_type, value_p);
 }
 
-_Bool boolean_get(boolean_t *boolean)
+_Bool boolean_get(const boolean_t *boolean)
 {
 	_Bool *value_p;
 
@@ -62,7 +62,7 @@ void boolean_free(boolean_t *boolean)
 	object_free(boolean);
 }
 
-int object_is_boolean(object_t *object)
+int object_is_boolean(const object_t *object)
 {
 	if (object_isa(object, boolean_type))
 		return 1;

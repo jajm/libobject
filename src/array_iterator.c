@@ -9,11 +9,11 @@
 #include "array_iterator.h"
 
 struct array_iterator_s {
-	object_t *object;
+	const object_t *object;
 	gds_iterator_t *iterator;
 };
 
-array_iterator_t * array_iterator_new(object_t *object)
+array_iterator_t * array_iterator_new(const object_t *object)
 {
 	array_iterator_t *array_iterator;
 

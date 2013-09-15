@@ -110,7 +110,7 @@ int hash_unset(hash_t *hash, const char *key)
 		(gds_free_cb) object_free);
 }
 
-object_t * hash_get(hash_t *hash, const char *key)
+object_t * hash_get(const hash_t *hash, const char *key)
 {
 	gds_hash_map_t *gds_hash_map;
 
@@ -121,7 +121,7 @@ object_t * hash_get(hash_t *hash, const char *key)
 }
 
 
-array_t * hash_keys(hash_t *hash)
+array_t * hash_keys(const hash_t *hash)
 {
 	gds_hash_map_t *gds_hash_map;
 	gds_slist_t *gds_keys;
@@ -141,7 +141,7 @@ array_t * hash_keys(hash_t *hash)
 	return keys;
 }
 
-array_t * hash_values(hash_t *hash)
+array_t * hash_values(const hash_t *hash)
 {
 	gds_hash_map_t *gds_hash_map;
 	gds_slist_t *gds_values;
@@ -168,7 +168,7 @@ void hash_free(hash_t *hash)
 	object_free(hash);
 }
 
-int object_is_hash(object_t *object)
+int object_is_hash(const object_t *object)
 {
 	if (object_isa(object, hash_type))
 		return 1;
