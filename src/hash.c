@@ -120,7 +120,6 @@ object_t * hash_get(const hash_t *hash, const char *key)
 	return gds_hash_map_get(gds_hash_map, key);
 }
 
-
 array_t * hash_keys(const hash_t *hash)
 {
 	gds_hash_map_t *gds_hash_map;
