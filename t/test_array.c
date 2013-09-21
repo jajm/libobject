@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "array.h"
-#include "array_iterator.h"
 #include "string.h"
 #include "type.h"
 #include "tap.h"

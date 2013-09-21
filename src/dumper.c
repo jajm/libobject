@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "object.h"
 #include "array.h"
-#include "array_iterator.h"
 #include "hash.h"
 #include "integer.h"
 #include "real.h"
@@ -33,10 +32,7 @@ void object_dump_into_string(string_t *dump, object_t *object,
 		string_cat(dump, ")");
 	} else if (object_is_hash(object)) {
 		string_cat(dump, "hash(\n");
-		array_t *keys = hash_keys(object);
-		array_foreach(keys, key) {
-			const char *k = string_to_c_str(key);
-			object_t *o = hash_get(object, k);
+		hash_foreach(object, k, o) {
 			for (unsigned int i = 0; i < indent+2; i++) {
 				string_cat(dump, " ");
 			}
@@ -44,7 +40,6 @@ void object_dump_into_string(string_t *dump, object_t *object,
 			object_dump_into_string(dump, o, indent+2, true);
 			string_cat(dump, ",\n");
 		}
-		array_free(keys);
 		for (unsigned int i = 0; i < indent; i++) {
 			string_cat(dump, " ");
 		}

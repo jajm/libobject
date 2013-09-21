@@ -2,6 +2,7 @@
 #define object_array_h_included
 
 #include "object.h"
+#include "iterator.h"
 
 typedef object_t array_t;
 
@@ -88,6 +89,20 @@ unsigned int
 array_size(
 	const array_t *array
 );
+
+iterator_t *
+array_iterator_new(
+	const object_t *object
+);
+
+
+#define array_foreach(array, object) \
+	for (iterator_t *__it = array_iterator_new(array) \
+		; __it != NULL \
+		; iterator_free(__it), __it = NULL) \
+	while (!iterator_step(__it)) \
+	for (object_t *object = iterator_get(__it), *__b = 0; __b == 0; \
+		__b = (object_t *)1)
 
 void array_free(
 	array_t *array

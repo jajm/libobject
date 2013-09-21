@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "object.h"
-#include "hash_iterator.h"
 #include "hash.h"
 #include "type.h"
 #include "tap.h"

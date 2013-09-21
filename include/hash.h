@@ -4,6 +4,7 @@
 #include "object.h"
 #include "string.h"
 #include "array.h"
+#include "iterator.h"
 
 typedef object_t hash_t;
 
@@ -39,6 +40,20 @@ hash_get(
 	const hash_t *hash,
 	const char *key
 );
+
+iterator_t *
+hash_iterator_new(
+	const object_t *object
+);
+
+#define hash_foreach(hash, key, value) \
+	for (iterator_t *__it = hash_iterator_new(hash) \
+		; __it != NULL \
+		; iterator_free(__it), __it = NULL) \
+	while (!iterator_step(__it)) \
+	for (const char *key = iterator_getkey(__it); key; key = NULL) \
+	for (object_t *value = iterator_get(__it), *__b = 0; \
+		__b == 0; __b = (object_t *)1)
 
 array_t *
 hash_keys(

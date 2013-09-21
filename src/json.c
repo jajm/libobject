@@ -7,7 +7,6 @@
 #include "object.h"
 #include "hash.h"
 #include "array.h"
-#include "array_iterator.h"
 #include "integer.h"
 #include "real.h"
 #include "boolean.h"
@@ -135,14 +134,10 @@ struct json_object * object_to_json_object(object_t *object)
 		json_object = json_object_new_int(integer_get(object));
 	} else if (object_is_hash(object)) {
 		json_object = json_object_new_object();
-		array_t *keys = hash_keys(object);
-		array_foreach(keys, key) {
-			const char *k = string_to_c_str(key);
-			object_t *value = hash_get(object, k);
+		hash_foreach(object, k, value) {
 			struct json_object *jo = object_to_json_object(value);
 			json_object_object_add(json_object, k, jo);
 		}
-		array_free(keys);
 	} else if (object_is_array(object)) {
 		json_object = json_object_new_array();
 		array_foreach(object, value) {

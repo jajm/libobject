@@ -120,6 +120,79 @@ object_t * hash_get(const hash_t *hash, const char *key)
 	return gds_hash_map_get(gds_hash_map, key);
 }
 
+typedef struct {
+	const object_t *object;
+	gds_iterator_t *iterator;
+} hash_iterator_data_t;
+
+int hash_iterator_reset(hash_iterator_data_t *data)
+{
+	if (data != NULL) {
+		return gds_iterator_reset(data->iterator);
+	}
+
+	return -1;
+}
+
+int hash_iterator_step(hash_iterator_data_t *data)
+{
+	if (data != NULL) {
+		return gds_iterator_step(data->iterator);
+	}
+
+	return -1;
+}
+
+object_t * hash_iterator_get(hash_iterator_data_t *data)
+{
+	if (data != NULL) {
+		return gds_iterator_get(data->iterator);
+	}
+
+	return NULL;
+}
+
+const char * hash_iterator_getkey(hash_iterator_data_t *data)
+{
+	if (data != NULL) {
+		return gds_iterator_getkey(data->iterator);
+	}
+
+	return NULL;
+}
+
+void hash_iterator_free(hash_iterator_data_t *data)
+{
+	if (data != NULL) {
+		gds_iterator_free(data->iterator);
+		free(data);
+	}
+}
+
+iterator_t * hash_iterator_new(const object_t *object)
+{
+	iterator_t *iterator;
+	hash_iterator_data_t *data;
+
+	if (!object_is_hash(object)) {
+		return NULL;
+	}
+
+	data = object_malloc(sizeof(hash_iterator_data_t));
+
+	data->object = object;
+	data->iterator = gds_hash_map_iterator_new(object_value(object));
+
+	iterator = iterator_new(data,
+		(iterator_reset_cb) hash_iterator_reset,
+		(iterator_step_cb) hash_iterator_step,
+		(iterator_get_cb) hash_iterator_get,
+		(iterator_getkey_cb) hash_iterator_getkey,
+		(iterator_free_cb) hash_iterator_free);
+
+	return iterator;
+}
+
 array_t * hash_keys(const hash_t *hash)
 {
 	gds_hash_map_t *gds_hash_map;

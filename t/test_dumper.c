@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "object.h"
 #include "array.h"
-#include "array_iterator.h"
 #include "hash.h"
 #include "integer.h"
 #include "real.h"

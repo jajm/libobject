@@ -5,6 +5,8 @@
 #include "exception.h"
 #include "type.h"
 #include "object.h"
+#include "malloc.h"
+#include "iterator.h"
 #include "array.h"
 
 static const char array_type[] = "ARRAY";
@@ -136,6 +138,80 @@ unsigned int array_size(const array_t *array)
 	assert_object_is_array(array);
 
 	return gds_dlist_size(object_value(array));
+}
+
+typedef struct {
+	const object_t *object;
+	gds_iterator_t *iterator;
+} array_iterator_data_t;
+
+int array_iterator_reset(array_iterator_data_t *data)
+{
+	if (data != NULL) {
+		return gds_iterator_reset(data->iterator);
+	}
+
+	return -1;
+}
+
+int array_iterator_step(array_iterator_data_t *data)
+{
+	if (data != NULL) {
+		return gds_iterator_step(data->iterator);
+	}
+
+	return -1;
+}
+
+object_t * array_iterator_get(array_iterator_data_t *data)
+{
+	if (data != NULL) {
+		return gds_iterator_get(data->iterator);
+	}
+
+	return UNDEFINED;
+}
+
+void * array_iterator_getkey(array_iterator_data_t *data)
+{
+	if (data != NULL) {
+		return gds_iterator_getkey(data->iterator);
+	}
+
+	return UNDEFINED;
+}
+
+void array_iterator_free(array_iterator_data_t *data)
+{
+	if (data != NULL) {
+		gds_iterator_free(data->iterator);
+		free(data);
+	}
+}
+
+iterator_t * array_iterator_new(const object_t *object)
+{
+	array_iterator_data_t *data;
+	iterator_t *iterator;
+
+	if (!object_is_array(object)) {
+		return NULL;
+	}
+
+	data = object_malloc(sizeof(array_iterator_data_t));
+
+	data->object = object;
+	data->iterator = gds_dlist_iterator_new(object_value(object));
+
+	iterator = iterator_new(data,
+		(iterator_reset_cb) array_iterator_reset,
+		(iterator_step_cb) array_iterator_step,
+		(iterator_get_cb) array_iterator_get,
+		(iterator_getkey_cb) array_iterator_getkey,
+		(iterator_free_cb) array_iterator_free
+	);
+
+	return iterator;
 }
 
 void array_free(array_t *array)
