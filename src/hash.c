@@ -96,7 +96,8 @@ int hash_set(hash_t *hash, const char *key, object_t *value)
 	strncpy(k, key, len+1);
 
 	gds_hash_map = object_value(hash);
-	return gds_hash_map_set(gds_hash_map, k, value, NULL);
+	return gds_hash_map_set(gds_hash_map, k, value, free,
+		(gds_free_cb) object_free);
 }
 
 int hash_unset(hash_t *hash, const char *key)

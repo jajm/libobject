@@ -127,7 +127,8 @@ void type_set_callback(type_t *type, const char *name, void *callback)
 			len = strlen(name);
 			_name = object_malloc(sizeof(char) * (len+1));
 			strncpy(_name, name, len+1);
-			gds_hash_map_set(type->callbacks, _name, callback, NULL);
+			gds_hash_map_set(type->callbacks, _name, callback, NULL,
+				NULL);
 		}
 	}
 }
