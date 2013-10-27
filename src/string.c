@@ -10,37 +10,60 @@
 #include "string.h"
 
 typedef struct {
-	union {
-		char *c_str;
-		const char *static_c_str;
-	} value;
+	char *c_str;
 	size_t len;
-	unsigned int is_static;
+	size_t size;
 } string_value_t;
 
-string_value_t * string_value_new(char *s)
+void string_value_adjust_size(string_value_t *sv, size_t size_needed)
+{
+	size_t new_size;
+
+	if (sv != NULL && size_needed > 0) {
+		new_size = (sv->size > 0) ? sv->size : 2;
+		if (size_needed > sv->size) {
+			while (new_size < size_needed) {
+				new_size *= 2;
+			}
+		} else {
+			while (new_size/2 > size_needed) {
+				new_size /= 2;
+			}
+		}
+
+		if (new_size != sv->size) {
+			sv->c_str = object_realloc(sv->c_str, new_size);
+			sv->size = new_size;
+		}
+	}
+}
+
+string_value_t * string_value_new(char *s, size_t len)
 {
 	string_value_t *string_value = NULL;
 
 	if (s != NULL) {
 		string_value = object_malloc(sizeof(string_value_t));
-		string_value->len = strlen(s);
-		string_value->value.c_str = s;
-		string_value->is_static = 0;
+		string_value->len = (len > 0) ? len : strlen(s);
+		string_value->c_str = s;
+		string_value->size = 0;
+		string_value_adjust_size(string_value, string_value->len+1);
 	}
 
 	return string_value;
 }
 
-string_value_t * string_value_new_static(const char *s)
+string_value_t * string_value_new_copy(const char *s)
 {
 	string_value_t *string_value = NULL;
+	char *copy;
+	size_t len;
 
 	if (s != NULL) {
-		string_value = object_malloc(sizeof(string_value_t));
-		string_value->len = strlen(s);
-		string_value->value.static_c_str = s;
-		string_value->is_static = 1;
+		len = strlen(s);
+		copy = object_malloc(sizeof(char) * (len+1));
+		strncpy(copy, s, len+1);
+		string_value = string_value_new(copy, len);
 	}
 
 	return string_value;
@@ -49,9 +72,7 @@ string_value_t * string_value_new_static(const char *s)
 void string_value_free(string_value_t *string_value)
 {
 	if (string_value != NULL) {
-		if (!string_value->is_static) {
-			free(string_value->value.c_str);
-		}
+		free(string_value->c_str);
 		free(string_value);
 	}
 }
@@ -75,33 +96,14 @@ void string_type_register(void)
 	}
 }
 
-string_t * string_new(char *s)
+string_t * string_new(const char *s)
 {
 	string_value_t *string_value;
 	string_t *string = NULL;
 
 	string_type_register();
 
-	string_value = string_value_new(s);
-	if (string_value != NULL) {
-		string = object_new(string_type, string_value);
-	}
-	if (string == NULL) {
-		log_error("Failed to create string object");
-		string_value_free(string_value);
-	}
-
-	return string;
-}
-
-string_t * string_new_static(const char *s)
-{
-	string_value_t *string_value;
-	string_t *string = NULL;
-
-	string_type_register();
-
-	string_value = string_value_new_static(s);
+	string_value = string_value_new_copy(s);
 	if (string_value != NULL) {
 		string = object_new(string_type, string_value);
 	}
@@ -118,7 +120,10 @@ string_t * string_new_from_array(unsigned int n, const char *s[])
 	size_t len[n], total_len = 0, offset = 0;
 	unsigned int i;
 	char *buf;
+	string_value_t *string_value;
 	string_t *string;
+
+	string_type_register();
 
 	for (i=0; i<n; i++) {
 		len[i] = strlen(s[i]);
@@ -134,7 +139,14 @@ string_t * string_new_from_array(unsigned int n, const char *s[])
 		offset += len[i];
 	}
 
-	string = string_new(buf);
+	string_value = string_value_new(buf, total_len);
+	if (string_value != NULL) {
+		string = object_new(string_type, string_value);
+	}
+	if (string == NULL) {
+		log_error("Failed to create string object");
+		string_value_free(string_value);
+	}
 
 	return string;
 }
@@ -146,7 +158,7 @@ const char * string_to_c_str(const string_t *string)
 	assert_object_is_string(string);
 
 	string_value = object_value(string);
-	return string_value->value.c_str;
+	return string_value->c_str;
 }
 
 size_t string_length(const string_t *string)
@@ -166,18 +178,17 @@ int string_cat_from_array(string_t *dest, unsigned int n, const char *src[])
 	string_value_t *string_value;
 
 	string_value = object_value(dest);
-	if (string_value && !string_value->is_static) {
+	if (string_value != NULL) {
 		for (i=0; i<n; i++) {
 			len[i] = strlen(src[i]);
 			total_len += len[i];
 		}
 
-		string_value->value.c_str = realloc(string_value->value.c_str,
-			string_value->len + total_len + 1);
+		string_value_adjust_size(string_value, string_value->len + total_len + 1);
 
 		offset = string_value->len;
 		for (i=0; i<n; i++) {
-			strcat(string_value->value.c_str + offset, src[i]);
+			strcat(string_value->c_str + offset, src[i]);
 			offset += len[i];
 		}
 		string_value->len += total_len;

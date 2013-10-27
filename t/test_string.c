@@ -12,7 +12,7 @@
 
 int main()
 {
-	plan(10);
+	plan(8);
 	int added;
 
 	string_t *string = string("hello", ", ", "world!");
@@ -30,13 +30,8 @@ int main()
 	string_eq(string, "hello, world!foobarbazgoodbye, world...");
 	string_len_is(string, 39);
 
-	string_t *string3 = string_new_static("Static string");
-	string_eq(string3, "Static string");
-	string_len_is(string3, 13);
-
 	string_free(string);
 	string_free(string2);
-	string_free(string3);
 
 	types_finalize();
 

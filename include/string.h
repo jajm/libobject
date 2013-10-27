@@ -8,11 +8,6 @@ typedef object_t string_t;
 
 string_t *
 string_new(
-	char *s
-);
-
-string_t *
-string_new_static(
 	const char *s
 );
 
