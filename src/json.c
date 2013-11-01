@@ -141,7 +141,7 @@ object_t * object_from_json_file(const char *filename)
 
 struct json_object * object_to_json_object(object_t *object)
 {
-	struct json_object *json_object;
+	struct json_object *json_object = NULL;
 
 	if (!object_isset(object)) {
 		json_object = NULL;
