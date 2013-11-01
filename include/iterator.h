@@ -22,12 +22,78 @@
 
 typedef struct iterator_s iterator_t;
 
-typedef int (*iterator_reset_cb)(void *);
-typedef int (*iterator_step_cb)(void *);
-typedef object_t * (*iterator_get_cb)(void *);
-typedef void * (*iterator_getkey_cb)(void *);
-typedef void (*iterator_free_cb)(void *);
+/* Iterator reset callback.
+ *
+ * This callback is responsible for resetting the iterator to its initial state.
+ *
+ * Parameters
+ *   data : The iterator data.
+ *
+ * Should returns
+ *   0 on success.
+ *   a negative value on failure.
+ */
+typedef int (*iterator_reset_cb)(void *data);
 
+/* Iterator step callback.
+ *
+ * This callback should advance the iterator one step.
+ *
+ * Parameters
+ *   data : The iterator data.
+ *
+ * Should returns
+ *   0 on success.
+ *   a positive value if iterator is already on last element.
+ *   a negative value on failure.
+ */
+typedef int (*iterator_step_cb)(void *data);
+
+/* Iterator get callback.
+ *
+ * This callback should return the object at iterator position.
+ *
+ * Parameters
+ *   data : The iterator data.
+ *
+ * Should returns
+ *   Pointer to object.
+ */
+typedef object_t * (*iterator_get_cb)(void *data);
+
+/* Iterator getkey callback.
+ *
+ * This callback should return the key at iterator position, if any.
+ *
+ * Parameters
+ *   data : The iterator data.
+ *
+ * Should returns
+ *   Pointer to key if there is one, or NULL otherwise.
+ */
+typedef void * (*iterator_getkey_cb)(void *data);
+
+/* Iterator free callback.
+ *
+ * This callback is responsible for freeing memory used by iterator data.
+ *
+ * Parameters
+ *   data : The iterator data.
+ */
+typedef void (*iterator_free_cb)(void *data);
+
+/* Create a new iterator.
+ *
+ * Parameters
+ *   data      : Iterator data that will be passed to each callback.
+ *   reset_cb  : Reset callback.
+ *   step_cb   : Step callback.
+ *   getkey_cb : Getkey callback.
+ *   free_cb   : Free callback.
+ *
+ * Returns
+ *   Pointer to iterator.
+ */
 iterator_t *
 iterator_new(
 	void *data,
@@ -38,11 +104,69 @@ iterator_new(
 	iterator_free_cb free_cb
 );
 
-int iterator_reset(iterator_t *it);
-int iterator_step(iterator_t *it);
-object_t * iterator_get(iterator_t *it);
-void * iterator_getkey(iterator_t *it);
-void iterator_free(iterator_t *it);
+/* Call iterator reset callback.
+ *
+ * Parameters
+ *   it : Pointer to iterator.
+ *
+ * Returns
+ *   The return value of iterator reset callback.
+ */
+int
+iterator_reset(
+	iterator_t *it
+);
+
+/* Call iterator step callback.
+ *
+ * Parameters
+ *   it : Pointer to iterator.
+ *
+ * Returns
+ *   The return value of iterator step callback.
+ */
+int
+iterator_step(
+	iterator_t *it
+);
+
+/* Call iterator get callback.
+ *
+ * Parameters
+ *   it : Pointer to iterator.
+ *
+ * Returns
+ *   The return value of iterator get callback.
+ */
+object_t *
+iterator_get(
+	iterator_t *it
+);
+
+/* Call iterator getkey callback.
+ *
+ * Parameters
+ *   it : Pointer to iterator.
+ *
+ * Returns
+ *   The return value of iterator getkey callback.
+ */
+void *
+iterator_getkey(
+	iterator_t *it
+);
+
+/* Free memory used by iterator.
+ *
+ * It calls iterator free callback.
+ *
+ * Parameters
+ *   it : Pointer to iterator.
+ */
+void
+iterator_free(
+	iterator_t *it
+);
 
 #endif /* ! object_iterator_h_included */
 
