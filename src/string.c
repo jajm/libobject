@@ -134,6 +134,25 @@ string_t * string_new(const char *s)
 	return string;
 }
 
+string_t * string_new_nocopy(char *s)
+{
+	string_value_t *string_value;
+	string_t *string = NULL;
+
+	string_type_register();
+
+	string_value = string_value_new(s, strlen(s));
+	if (string_value != NULL) {
+		string = object_new(string_type, string_value);
+	}
+	if (string == NULL) {
+		log_error("Failed to create string object");
+		string_value_free(string_value);
+	}
+
+	return string;
+}
+
 string_t * string_new_from_array(unsigned int n, const char *s[])
 {
 	size_t len[n], total_len = 0, offset = 0;

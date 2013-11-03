@@ -31,6 +31,11 @@ string_new(
 );
 
 string_t *
+string_new_nocopy(
+	char *s
+);
+
+string_t *
 string_new_from_array(
 	unsigned int n,
 	const char *s[]

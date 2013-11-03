@@ -12,7 +12,7 @@
 
 int main()
 {
-	plan(8);
+	plan(10);
 	int added;
 
 	string_t *string = string("hello", ", ", "world!");
@@ -30,8 +30,15 @@ int main()
 	string_eq(string, "hello, world!foobarbazgoodbye, world...");
 	string_len_is(string, 39);
 
+	char *s = malloc(sizeof(char) * 12);
+	strcpy(s, "foo bar baz");
+	string_t *string3 = string_new_nocopy(s);
+	string_eq(string3, "foo bar baz");
+	string_len_is(string3, 11);
+
 	string_free(string);
 	string_free(string2);
+	string_free(string3);
 
 	types_finalize();
 
