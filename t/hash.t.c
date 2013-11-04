@@ -3,6 +3,7 @@
 #include "object.h"
 #include "hash.h"
 #include "type.h"
+#include "foreach.h"
 #include "tap.h"
 
 int main()
@@ -27,7 +28,7 @@ int main()
 		"key 3", string("value 3")
 	);
 
-	hash_foreach(hash, key, val) {
+	foreachk(hash, key, val) {
 		if (!strcmp(key, "key 1")) str_eq(string_to_c_str(val), "value 1");
 		if (!strcmp(key, "key 2")) str_eq(string_to_c_str(val), "value 2");
 		if (!strcmp(key, "key 3")) str_eq(string_to_c_str(val), "value 3");

@@ -61,6 +61,8 @@ void hash_free_callback(gds_hash_map_t *gds_hash_map)
 
 static _Bool hash_type_registered = false;
 
+iterator_t * hash_iterator_new(const object_t *object);
+
 void hash_type_register(void)
 {
 	type_t *type;
@@ -68,6 +70,7 @@ void hash_type_register(void)
 	if (!hash_type_registered) {
 		type = type_get(hash_type);
 		type_set_callback(type, "free", hash_free_callback);
+		type_set_callback(type, "iterator", hash_iterator_new);
 		hash_type_registered = true;
 	}
 }

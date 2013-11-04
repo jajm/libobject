@@ -29,6 +29,7 @@
 #include "integer.h"
 #include "real.h"
 #include "boolean.h"
+#include "foreach.h"
 
 object_t * object_from_json_object(struct json_object *json_object);
 
@@ -153,13 +154,13 @@ struct json_object * object_to_json_object(object_t *object)
 		json_object = json_object_new_int(integer_get(object));
 	} else if (object_is_hash(object)) {
 		json_object = json_object_new_object();
-		hash_foreach(object, k, value) {
+		foreachk(object, k, value) {
 			struct json_object *jo = object_to_json_object(value);
 			json_object_object_add(json_object, k, jo);
 		}
 	} else if (object_is_array(object)) {
 		json_object = json_object_new_array();
-		array_foreach(object, value) {
+		foreach(object, value) {
 			struct json_object *jo = object_to_json_object(value);
 			json_object_array_add(json_object, jo);
 		}

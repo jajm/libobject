@@ -22,6 +22,8 @@
 
 typedef struct iterator_s iterator_t;
 
+#include "object.h"
+
 /* Iterator reset callback.
  *
  * This callback is responsible for resetting the iterator to its initial state.

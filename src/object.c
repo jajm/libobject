@@ -26,6 +26,7 @@
 #include "exception.h"
 #include "type.h"
 #include "malloc.h"
+#include "iterator.h"
 #include "object.h"
 
 struct object_s {
@@ -126,6 +127,21 @@ int object_isa(const object_t *object, const char *type)
 	}
 
 	return 0;
+}
+
+iterator_t * object_iterator_new(object_t *object)
+{
+	iterator_t *(*iterator_callback)(object_t *);
+	iterator_t *iterator = NULL;
+
+	if (object_isset(object)) {
+		iterator_callback = type_get_callback(object->type, "iterator");
+		if (iterator_callback != NULL) {
+			iterator = iterator_callback(object);
+		}
+	}
+
+	return iterator;
 }
 
 void object_free_value(object_t *object)

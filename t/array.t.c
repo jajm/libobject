@@ -4,6 +4,7 @@
 #include "array.h"
 #include "string.h"
 #include "type.h"
+#include "foreach.h"
 #include "tap.h"
 
 int main()
@@ -25,7 +26,7 @@ int main()
 	array_unshift(a, string("zero"));
 	ok(array_size(a) == 3, "array has 3 elements");
 
-	array_foreach(a, o) {
+	foreach(a, o) {
 		if (i == 0) { str_eq(string_to_c_str(o), "zero"); }
 		else if (i == 1) { str_eq(string_to_c_str(o), "one"); }
 		else if (i == 2) { str_eq(string_to_c_str(o), "two"); }

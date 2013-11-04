@@ -41,6 +41,8 @@ void array_free_callback(gds_dlist_t *list)
 
 static _Bool array_type_registered = false;
 
+iterator_t * array_iterator_new(const object_t *object);
+
 void array_type_register(void)
 {
 	type_t *type;
@@ -48,6 +50,7 @@ void array_type_register(void)
 	if (!array_type_registered) {
 		type = type_get(array_type);
 		type_set_callback(type, "free", array_free_callback);
+		type_set_callback(type, "iterator", array_iterator_new);
 		array_type_registered = true;
 	}
 }

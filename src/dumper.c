@@ -25,6 +25,7 @@
 #include "real.h"
 #include "boolean.h"
 #include "string.h"
+#include "foreach.h"
 #include "dumper.h"
 
 void object_dump_into_string(string_t *dump, object_t *object,
@@ -41,7 +42,7 @@ void object_dump_into_string(string_t *dump, object_t *object,
 		string_cat(dump, "null()");
 	} else if (object_is_array(object)) {
 		string_cat(dump, "array(\n");
-		array_foreach(object, o) {
+		foreach(object, o) {
 			object_dump_into_string(dump, o, indent+2, false);
 			string_cat(dump, ",\n");
 		}
@@ -51,7 +52,7 @@ void object_dump_into_string(string_t *dump, object_t *object,
 		string_cat(dump, ")");
 	} else if (object_is_hash(object)) {
 		string_cat(dump, "hash(\n");
-		hash_foreach(object, k, o) {
+		foreachk(object, k, o) {
 			for (unsigned int i = 0; i < indent+2; i++) {
 				string_cat(dump, " ");
 			}

@@ -22,6 +22,8 @@
 
 typedef struct object_s object_t;
 
+#include "iterator.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -151,6 +153,24 @@ int
 object_isa(
 	const object_t *object,
 	const char *type
+);
+
+/* Create a new iterator.
+ *
+ * This function call 'iterator' callback if it finds one.
+ * Prototype of this callback should be:
+ *   iterator_t *iterator(object_t *object);
+ *
+ * Parameters
+ *   object : Pointer to object.
+ *
+ * Returns
+ *   Pointer to iterator if 'iterator' callback is found.
+ *   NULL otherwise.
+ */
+iterator_t *
+object_iterator_new(
+	object_t *object
 );
 
 /* Free memory used by object.
