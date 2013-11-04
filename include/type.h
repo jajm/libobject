@@ -22,6 +22,10 @@
 
 typedef struct type_s type_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Initialize the global data structure that will handle types.
  *
  * You probably don't need to use this function, as it is called when type_get()
@@ -95,6 +99,10 @@ type_get_callback(
  */
 void
 types_finalize(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ! object_type_h_included */
 

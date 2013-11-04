@@ -25,6 +25,10 @@
 typedef object_t integer_t;
 typedef int integer_int_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 integer_t *
 integer_new(
 	integer_int_t value
@@ -53,6 +57,10 @@ int
 object_is_integer(
 	const object_t *object
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ! object_integer_h_included */
 

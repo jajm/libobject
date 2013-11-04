@@ -82,6 +82,10 @@ typedef void * (*iterator_getkey_cb)(void *data);
  */
 typedef void (*iterator_free_cb)(void *data);
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Create a new iterator.
  *
  * Parameters
@@ -167,6 +171,10 @@ void
 iterator_free(
 	iterator_t *it
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ! object_iterator_h_included */
 

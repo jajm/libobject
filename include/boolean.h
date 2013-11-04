@@ -25,6 +25,10 @@
 
 typedef object_t boolean_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Create a new boolean object.
  *
  * Parameters
@@ -89,6 +93,10 @@ int
 object_is_boolean(
 	const object_t *object
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ! object_boolean_h_included */
 

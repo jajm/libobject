@@ -22,6 +22,10 @@
 
 #include "object.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 object_t *
 object_from_json(
 	const char *json
@@ -44,6 +48,10 @@ object_to_json(
 	object_t *object,
 	int flags
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ! object_json_h_included */
 

@@ -23,10 +23,18 @@
 #include "object.h"
 #include "string.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 string_t * object_dump(object_t *object, const char *name);
 
 #define dump(var) \
 	object_dump(var, #var)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ! object_dumper_h_included */
 

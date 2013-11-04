@@ -25,6 +25,10 @@
 
 typedef object_t string_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 string_t *
 string_new(
 	const char *s
@@ -89,6 +93,10 @@ int
 object_is_string(
 	const object_t *object
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ! object_string_h_included */
 

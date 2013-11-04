@@ -25,6 +25,10 @@
 
 typedef object_t array_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 array_t *
 array_new(
 	unsigned int size,
@@ -131,6 +135,10 @@ int
 object_is_array(
 	const object_t *object
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ! object_array_h_included */
 

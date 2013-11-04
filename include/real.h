@@ -24,6 +24,10 @@
 
 typedef object_t real_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 real_t *
 real_new(
 	double value
@@ -52,6 +56,10 @@ int
 object_is_real(
 	const object_t *object
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ! object_real_h_included */
 

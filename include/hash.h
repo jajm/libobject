@@ -27,6 +27,10 @@
 
 typedef object_t hash_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 hash_t *
 hash_new(void);
 
@@ -93,6 +97,10 @@ int
 object_is_hash(
 	const object_t *object
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ! object_hash_h_included */
 

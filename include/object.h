@@ -22,6 +22,10 @@
 
 typedef struct object_s object_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Create a new object.
  *
  * An object is basically two things: a type and a value.
@@ -162,6 +166,10 @@ void
 object_free(
 	object_t *object
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ! object_object_h_included */
 
