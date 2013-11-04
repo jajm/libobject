@@ -25,6 +25,14 @@
 
 typedef object_t boolean_t;
 
+/* Create a new boolean object.
+ *
+ * Parameters
+ *   value : Boolean value.
+ *
+ * Returns
+ *   Pointer to new boolean object.
+ */
 boolean_t *
 boolean_new(
 	_Bool value
@@ -33,22 +41,50 @@ boolean_new(
 #define boolean(value) \
 	boolean_new(value)
 
+/* Get boolean value.
+ *
+ * Parameters
+ *   boolean : Pointer to boolean object.
+ *
+ * Returns:
+ *   Boolean value.
+ */
 _Bool
 boolean_get(
 	const boolean_t *boolean
 );
 
+/* Set boolean value.
+ *
+ * Parameters
+ *   boolean : Pointer to boolean object.
+ *   value   : Boolean value.
+ */
 void
 boolean_set(
 	boolean_t *boolean,
 	_Bool value
 );
 
+/* Free memory used by boolean object.
+ *
+ * Parameters
+ *   boolean : Pointer to boolean object.
+ */
 void
 boolean_free(
 	boolean_t *boolean
 );
 
+/* Determines if an object is a boolean object.
+ *
+ * Parameters
+ *   object : Pointer to object.
+ *
+ * Returns
+ *   0 if object is not a boolean object.
+ *   1 if object is a boolean object.
+ */
 int
 object_is_boolean(
 	const object_t *object
