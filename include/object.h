@@ -173,6 +173,25 @@ object_iterator_new(
 	object_t *object
 );
 
+/* Convert an object into string.
+ *
+ * This function call 'to_str' callback if it finds one.
+ * Prototype of this callback should be:
+ *   char *to_str(object_t *object);
+ *
+ * Parameters
+ *   object : Pointer to object.
+ *
+ * Returns
+ *   String conversion of object if 'to_str' callback is found. User is
+ *   responsible for freeing memory with free().
+ *   NULL if 'to_str' callback is not found.
+ */
+char *
+object_to_str(
+	object_t *object
+);
+
 /* Free memory used by object.
  *
  * This function call 'free' callback if it finds one.

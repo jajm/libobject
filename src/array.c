@@ -26,6 +26,7 @@
 #include "object.h"
 #include "malloc.h"
 #include "iterator.h"
+#include "utils.h"
 #include "array.h"
 
 static const char array_type[] = "ARRAY";
@@ -42,6 +43,7 @@ void array_free_callback(gds_dlist_t *list)
 static _Bool array_type_registered = false;
 
 iterator_t * array_iterator_new(const object_t *object);
+char *array_to_str(const array_t *array);
 
 void array_type_register(void)
 {
@@ -51,6 +53,7 @@ void array_type_register(void)
 		type = type_get(array_type);
 		type_set_callback(type, "free", array_free_callback);
 		type_set_callback(type, "iterator", array_iterator_new);
+		type_set_callback(type, "to_str", array_to_str);
 		array_type_registered = true;
 	}
 }
@@ -249,4 +252,13 @@ int object_is_array(const object_t *object)
 		return 1;
 	
 	return 0;
+}
+
+char *array_to_str(const array_t *array)
+{
+	char buffer[32];
+
+	sprintf(buffer, "ARRAY(%p)", array);
+
+	return object_strdup(buffer);
 }

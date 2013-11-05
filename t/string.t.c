@@ -12,7 +12,7 @@
 
 int main()
 {
-	plan(10);
+	plan(11);
 	int added;
 
 	string_t *string = string("hello", ", ", "world!");
@@ -35,6 +35,10 @@ int main()
 	string_t *string3 = string_new_nocopy(s);
 	string_eq(string3, "foo bar baz");
 	string_len_is(string3, 11);
+
+	char *str = object_to_str(string3);
+	ok(!strcmp(str, "foo bar baz"), "object_to_str returns \"foo bar baz\"");
+	free(str);
 
 	string_free(string);
 	string_free(string2);

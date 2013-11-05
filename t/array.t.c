@@ -13,7 +13,7 @@ int main()
 	string_t *s;
 	int i = 0;
 
-	plan(14);
+	plan(15);
 
 	a = array();
 	ok(object_is_array(a), "object is array");
@@ -56,6 +56,12 @@ int main()
 	a = object_new("ARRAY", NULL);
 	ok(object_is_array(a), "object is array");
 	array_free(a);
+
+	a = array();
+	char *str = object_to_str(a);
+	ok(!strncmp(str, "ARRAY(", 6), "object_to_str returns \"ARRAY(...)\"");
+	free(str);
+	object_free(a);
 
 	types_finalize();
 

@@ -24,6 +24,7 @@
 #include "type.h"
 #include "malloc.h"
 #include "object.h"
+#include "utils.h"
 #include "real.h"
 
 static const char real_type[] = "REAL";
@@ -34,6 +35,8 @@ static const char real_type[] = "REAL";
 
 static _Bool real_type_registered = false;
 
+char *real_to_str(const real_t *real);
+
 void real_type_register(void)
 {
 	type_t *type;
@@ -41,6 +44,7 @@ void real_type_register(void)
 	if (!real_type_registered) {
 		type = type_get(real_type);
 		type_set_callback(type, "free", free);
+		type_set_callback(type, "to_str", real_to_str);
 		real_type_registered = true;
 	}
 }
@@ -92,4 +96,13 @@ int object_is_real(const object_t *object)
 		return 1;
 	
 	return 0;
+}
+
+char *real_to_str(const real_t *real)
+{
+	char buffer[32];
+
+	sprintf(buffer, "%f", real_get(real));
+
+	return object_strdup(buffer);
 }

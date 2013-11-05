@@ -23,6 +23,7 @@
 #include "exception.h"
 #include "type.h"
 #include "object.h"
+#include "utils.h"
 #include "boolean.h"
 
 static const char boolean_type[] = "BOOLEAN";
@@ -33,10 +34,15 @@ static const char boolean_type[] = "BOOLEAN";
 
 static _Bool boolean_type_registered = false;
 
+char *boolean_to_str(const object_t *object);
+
 void boolean_type_register(void)
 {
+	type_t *type;
+
 	if (!boolean_type_registered) {
-		type_get(boolean_type);
+		type = type_get(boolean_type);
+		type_set_callback(type, "to_str", boolean_to_str);
 		boolean_type_registered = true;
 	}
 }
@@ -87,4 +93,15 @@ int object_is_boolean(const object_t *object)
 		return 1;
 
 	return 0;
+}
+
+char *boolean_to_str(const boolean_t *boolean)
+{
+	_Bool *value_p;
+	char *s;
+
+	value_p = object_value(boolean);
+	s = object_strdup( (*value_p) ? "TRUE" : "FALSE" );
+
+	return s;
 }

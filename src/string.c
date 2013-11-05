@@ -26,6 +26,7 @@
 #include "type.h"
 #include "malloc.h"
 #include "object.h"
+#include "utils.h"
 #include "string.h"
 
 typedef struct {
@@ -104,6 +105,8 @@ static const char string_type[] = "STRING";
 
 static _Bool string_type_registered = false;
 
+char *string_to_str(const string_t *string);
+
 void string_type_register(void)
 {
 	type_t *type;
@@ -111,6 +114,7 @@ void string_type_register(void)
 	if (!string_type_registered) {
 		type = type_get(string_type);
 		type_set_callback(type, "free", string_value_free);
+		type_set_callback(type, "to_str", string_to_str);
 		string_type_registered = true;
 	}
 }
@@ -258,4 +262,9 @@ int object_is_string(const object_t *object)
 		return 1;
 
 	return 0;
+}
+
+char *string_to_str(const string_t *string)
+{
+	return object_strdup(string_to_c_str(string));
 }

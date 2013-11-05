@@ -27,6 +27,7 @@
 #include "malloc.h"
 #include "object.h"
 #include "array.h"
+#include "utils.h"
 #include "hash.h"
 
 #define HASH_SIZE 512
@@ -62,6 +63,7 @@ void hash_free_callback(gds_hash_map_t *gds_hash_map)
 static _Bool hash_type_registered = false;
 
 iterator_t * hash_iterator_new(const object_t *object);
+char *hash_to_str(const hash_t *hash);
 
 void hash_type_register(void)
 {
@@ -71,6 +73,7 @@ void hash_type_register(void)
 		type = type_get(hash_type);
 		type_set_callback(type, "free", hash_free_callback);
 		type_set_callback(type, "iterator", hash_iterator_new);
+		type_set_callback(type, "to_str", hash_to_str);
 		hash_type_registered = true;
 	}
 }
@@ -269,4 +272,13 @@ int object_is_hash(const object_t *object)
 		return 1;
 
 	return 0;
+}
+
+char *hash_to_str(const hash_t *hash)
+{
+	char buffer[32];
+
+	sprintf(buffer, "HASH(%p)", hash);
+
+	return object_strdup(buffer);
 }

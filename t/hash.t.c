@@ -10,7 +10,7 @@ int main()
 {
 	hash_t *hash;
 
-	plan(10);
+	plan(11);
 
 	hash = hash_new();
 	ok(object_is_hash(hash), "object is hash");
@@ -42,6 +42,11 @@ int main()
 	array_t *values = hash_values(hash);
 	ok(object_is_array(values), "hash_values() returns array");
 	ok(array_size(values) == 3, "hash has 3 values");
+
+	char *str = object_to_str(hash);
+	ok(!strncmp(str, "HASH(", 5), "object_to_str returns \"HASH(...)\"");
+	free(str);
+
 	array_free(values);
 
 	hash_free(hash);

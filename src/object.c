@@ -144,6 +144,21 @@ iterator_t * object_iterator_new(object_t *object)
 	return iterator;
 }
 
+char * object_to_str(object_t *object)
+{
+	char *(*to_str_callback)(object_t *);
+	char *str = NULL;
+
+	if (object_isset(object)) {
+		to_str_callback = type_get_callback(object->type, "to_str");
+		if (to_str_callback != NULL) {
+			str = to_str_callback(object);
+		}
+	}
+
+	return str;
+}
+
 void object_free_value(object_t *object)
 {
 	void (*free_callback)(void *);

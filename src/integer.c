@@ -24,6 +24,7 @@
 #include "type.h"
 #include "malloc.h"
 #include "object.h"
+#include "utils.h"
 #include "integer.h"
 
 static const char integer_type[] = "INTEGER";
@@ -34,6 +35,8 @@ static const char integer_type[] = "INTEGER";
 
 static _Bool integer_type_registered = false;
 
+char *integer_to_str(const integer_t *integer);
+
 void integer_type_register(void)
 {
 	type_t *type;
@@ -41,6 +44,7 @@ void integer_type_register(void)
 	if (!integer_type_registered) {
 		type = type_get(integer_type);
 		type_set_callback(type, "free", free);
+		type_set_callback(type, "to_str", integer_to_str);
 		integer_type_registered = true;
 	}
 }
@@ -92,4 +96,15 @@ int object_is_integer(const object_t *object)
 		return 1;
 	
 	return 0;
+}
+
+char *integer_to_str(const integer_t *integer)
+{
+	char buffer[32];
+	integer_int_t *value_p;
+
+	value_p = object_value(integer);
+	sprintf(buffer, "%d", *value_p);
+
+	return object_strdup(buffer);
 }
