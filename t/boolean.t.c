@@ -23,7 +23,7 @@ int main()
 	ok(!strcmp(str, "FALSE"), "object_to_str returns \"FALSE\"");
 	free(str);
 
-	boolean_free(boolean);
+	object_free(boolean);
 
 	types_finalize();
 

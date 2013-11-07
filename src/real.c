@@ -84,12 +84,6 @@ double real_get(const real_t *real)
 	return *value_p;
 }
 
-void real_free(real_t *real)
-{
-	assert_object_is_real(real);
-	object_free(real);
-}
-
 int object_is_real(const object_t *object)
 {
 	if (object_isa(object, real_type))

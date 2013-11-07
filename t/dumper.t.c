@@ -20,8 +20,8 @@ int main()
 	object = integer_new(22);
 	s = dump(object);
 	str_eq(string_to_c_str(s), "object = integer(22);");
-	string_free(s);
-	integer_free(object);
+	object_free(s);
+	object_free(object);
 
 	object = array(string("aa"), string("bb"), string("cc"));
 	s = dump(object);
@@ -31,8 +31,8 @@ int main()
 		"  string(\"bb\"),\n"
 		"  string(\"cc\"),\n"
 		");");
-	string_free(s);
-	array_free(object);
+	object_free(s);
+	object_free(object);
 
 	object = hash(
 		"foo", array(
@@ -52,7 +52,7 @@ int main()
 		"    boolean(true),\n"
 		"  ),\n"
 		");");
-	string_free(s);
+	object_free(s);
 	object_free(object);
 
 	types_finalize();

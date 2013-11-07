@@ -40,9 +40,9 @@ int main()
 	ok(!strcmp(str, "foo bar baz"), "object_to_str returns \"foo bar baz\"");
 	free(str);
 
-	string_free(string);
-	string_free(string2);
-	string_free(string3);
+	object_free(string);
+	object_free(string2);
+	object_free(string3);
 
 	types_finalize();
 

@@ -251,11 +251,6 @@ int string_scat_from_array(string_t *dest, unsigned int n, const string_t *src[]
 	return string_cat_from_array(dest, n, s);
 }
 
-void string_free(string_t *string)
-{
-	object_free(string);
-}
-
 int object_is_string(const object_t *object)
 {
 	if (object_isa(object, string_type))

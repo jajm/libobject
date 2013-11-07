@@ -239,13 +239,6 @@ iterator_t * array_iterator_new(const object_t *object)
 	return iterator;
 }
 
-void array_free(array_t *array)
-{
-	assert_object_is_array(array);
-
-	object_free(array);
-}
-
 int object_is_array(const object_t *object)
 {
 	if (object_isa(object, array_type))

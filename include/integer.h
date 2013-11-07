@@ -48,11 +48,6 @@ integer_get(
 	const integer_t *integer
 );
 
-void
-integer_free(
-	integer_t *integer
-);
-
 int
 object_is_integer(
 	const object_t *object

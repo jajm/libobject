@@ -84,11 +84,6 @@ string_scat_from_array(
 	string_scat_from_array(dest, sizeof(__args) / sizeof(*__args), __args); \
 })
 
-void
-string_free(
-	string_t *string
-);
-
 int
 object_is_string(
 	const object_t *object

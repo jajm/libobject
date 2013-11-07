@@ -84,12 +84,6 @@ integer_int_t integer_get(const integer_t *integer)
 	return *value_p;
 }
 
-void integer_free(integer_t *integer)
-{
-	assert_object_is_integer(integer);
-	object_free(integer);
-}
-
 int object_is_integer(const object_t *object)
 {
 	if (object_isa(object, integer_type))

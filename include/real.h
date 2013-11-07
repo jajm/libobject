@@ -47,11 +47,6 @@ real_get(
 	const real_t *real
 );
 
-void
-real_free(
-	real_t *real
-);
-
 int
 object_is_real(
 	const object_t *object

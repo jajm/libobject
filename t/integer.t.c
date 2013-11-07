@@ -20,7 +20,7 @@ int main()
 	ok(!strcmp(str, "21"), "object_to_str returns \"21\"");
 	free(str);
 
-	integer_free(integer);
+	object_free(integer);
 
 	types_finalize();
 

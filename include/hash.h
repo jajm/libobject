@@ -137,18 +137,6 @@ hash_values(
 	const hash_t *hash
 );
 
-/* Free memory used by hash.
- *
- * Deprecated. Use object_free instead.
- *
- * Parameters
- *   hash : Pointer to hash.
- */
-void
-hash_free(
-	hash_t *hash
-);
-
 /* Tell if object is a hash.
  *
  * Parameters

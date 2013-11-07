@@ -35,15 +35,15 @@ int main()
 
 	s = array_pop(a);
 	str_eq(string_to_c_str(s), "two");
-	string_free(s);
+	object_free(s);
 	ok(array_size(a) == 2, "array has 2 elements");
 
 	s = array_shift(a);
 	str_eq(string_to_c_str(s), "zero");
-	string_free(s);
+	object_free(s);
 	ok(array_size(a) == 1, "array has 1 element");
 
-	array_free(a);
+	object_free(a);
 
 	a = object_new(NULL, NULL);
 	ok(!object_is_array(a), "object is not an array");
@@ -55,7 +55,7 @@ int main()
 
 	a = object_new("ARRAY", NULL);
 	ok(object_is_array(a), "object is array");
-	array_free(a);
+	object_free(a);
 
 	a = array();
 	char *str = object_to_str(a);

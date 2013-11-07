@@ -20,7 +20,7 @@ int main()
 	ok(object_is_string(value), "hash[\"key\"] is string");
 	str_eq(string_to_c_str(value), "value");
 
-	hash_free(hash);
+	object_free(hash);
 
 	hash = hash(
 		"key 1", string("value 1"),
@@ -37,7 +37,7 @@ int main()
 	array_t *keys = hash_keys(hash);
 	ok(object_is_array(keys), "hash_keys() returns array");
 	ok(array_size(keys) == 3, "hash has 3 keys");
-	array_free(keys);
+	object_free(keys);
 
 	array_t *values = hash_values(hash);
 	ok(object_is_array(values), "hash_values() returns array");
@@ -47,9 +47,9 @@ int main()
 	ok(!strncmp(str, "HASH(", 5), "object_to_str returns \"HASH(...)\"");
 	free(str);
 
-	array_free(values);
+	object_free(values);
 
-	hash_free(hash);
+	object_free(hash);
 
 	types_finalize();
 

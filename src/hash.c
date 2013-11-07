@@ -259,13 +259,6 @@ array_t * hash_values(const hash_t *hash)
 	return values;
 }
 
-void hash_free(hash_t *hash)
-{
-	assert_object_is_hash(hash);
-
-	object_free(hash);
-}
-
 int object_is_hash(const object_t *object)
 {
 	if (object_isa(object, hash_type))

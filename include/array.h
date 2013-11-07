@@ -113,10 +113,6 @@ array_size(
 	const array_t *array
 );
 
-void array_free(
-	array_t *array
-);
-
 int
 object_is_array(
 	const object_t *object

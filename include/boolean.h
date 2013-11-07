@@ -70,16 +70,6 @@ boolean_set(
 	_Bool value
 );
 
-/* Free memory used by boolean object.
- *
- * Parameters
- *   boolean : Pointer to boolean object.
- */
-void
-boolean_free(
-	boolean_t *boolean
-);
-
 /* Determines if an object is a boolean object.
  *
  * Parameters

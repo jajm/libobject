@@ -81,12 +81,6 @@ void boolean_set(boolean_t *boolean, _Bool value)
 	*value_p = value;
 }
 
-void boolean_free(boolean_t *boolean)
-{
-	assert_object_is_boolean(boolean);
-	object_free(boolean);
-}
-
 int object_is_boolean(const object_t *object)
 {
 	if (object_isa(object, boolean_type))
