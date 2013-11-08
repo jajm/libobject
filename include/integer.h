@@ -29,6 +29,14 @@ typedef int integer_int_t;
 extern "C" {
 #endif
 
+/* Create a new integer.
+ *
+ * Parameters
+ *   value : Integer value.
+ *
+ * Returns
+ *   Pointer to integer.
+ */
 integer_t *
 integer_new(
 	integer_int_t value
@@ -37,17 +45,40 @@ integer_new(
 #define integer(value) \
 	integer_new(value)
 
+/* Set the value of integer.
+ *
+ * Parameters
+ *   integer : Pointer to integer.
+ *   value   : The new integer value.
+ */
 void
 integer_set(
 	integer_t *integer,
 	integer_int_t value
 );
 
+/* Get the value of integer.
+ *
+ * Parameters
+ *   integer : Pointer to integer.
+ *
+ * Returns
+ *   Integer value.
+ */
 integer_int_t
 integer_get(
 	const integer_t *integer
 );
 
+/* Tell if object is integer.
+ *
+ * Parameters
+ *   object : Pointer to object.
+ *
+ * Returns
+ *   0 if object is not an integer.
+ *   1 if object is an integer.
+ */
 int
 object_is_integer(
 	const object_t *object
