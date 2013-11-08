@@ -109,7 +109,7 @@ object_t * array_get(const array_t *array, unsigned int offset)
 }
 
 void array_splice(array_t *array, unsigned int offset, unsigned int length,
-	void *callback, void *callback_data, array_t *replacement)
+	array_t *replacement)
 {
 	assert_object_is_array(array);
 
@@ -117,19 +117,19 @@ void array_splice(array_t *array, unsigned int offset, unsigned int length,
 		assert_object_is_array(replacement);
 	}
 
-	gds_dlist_splice(object_value(array), offset, length, callback,
-		callback_data, object_value(replacement));
+	gds_dlist_splice(object_value(array), offset, length, object_free,
+		NULL, object_value(replacement));
 }
 
-array_t * array_slice(const array_t *array, unsigned int offset, unsigned int length,
-	void *callback, void *callback_data)
+array_t * array_slice(const array_t *array, unsigned int offset,
+	unsigned int length)
 {
 	gds_dlist_t *slice;
 
 	assert_object_is_array(array);
 
-	slice = gds_dlist_slice(object_value(array), offset, length, callback,
-		callback_data);
+	slice = gds_dlist_slice(object_value(array), offset, length, NULL,
+		NULL);
 
 	return object_new(array_type, slice);
 }
