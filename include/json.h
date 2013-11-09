@@ -26,11 +26,27 @@
 extern "C" {
 #endif
 
+/* Create a new object from JSON string.
+ *
+ * Parameters
+ *   json : JSON string.
+ *
+ * Returns
+ *   Pointer to object.
+ */
 object_t *
 object_from_json(
 	const char *json
 );
 
+/* Create a new object from a JSON file.
+ *
+ * Parameters
+ *   filename : JSON file name.
+ *
+ * Returns
+ *   Pointer to object.
+ */
 object_t *
 object_from_json_file(
 	const char *filename
@@ -43,6 +59,17 @@ object_from_json_file(
 #define OBJECT_TO_JSON_VERY_PRETTY \
 	(OBJECT_TO_JSON_SPACED|OBJECT_TO_JSON_PRETTY|OBJECT_TO_JSON_NOZERO)
 
+/* Create a JSON string from an object.
+ *
+ * Parameters
+ *   object : Pointer to object.
+ *   flags : OBJECT_TO_JSON_PLAIN, or a OR-ed combination of
+ *           OBJECT_TO_JSON_SPACED, OBJECT_TO_JSON_PRETTY and
+ *           OBJECT_TO_JSON_NOZERO
+ *
+ * Returns
+ *   JSON string.
+ */
 char *
 object_to_json(
 	object_t *object,
