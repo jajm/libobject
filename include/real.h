@@ -28,6 +28,14 @@ typedef object_t real_t;
 extern "C" {
 #endif
 
+/* Create a new real.
+ *
+ * Parameters
+ *   value : Real value.
+ *
+ * Returns
+ *   Pointer to real.
+ */
 real_t *
 real_new(
 	double value
@@ -36,17 +44,40 @@ real_new(
 #define real(value) \
 	real_new(value)
 
+/* Set real value.
+ *
+ * Parameters
+ *   real  : Pointer to real.
+ *   value : New real value.
+ */
 void
 real_set(
 	real_t *real,
 	double value
 );
 
+/* Get real value.
+ *
+ * Parameters
+ *   real : Pointer to real.
+ *
+ * Returns
+ *   Real value.
+ */
 double
 real_get(
 	const real_t *real
 );
 
+/* Tell if object is real.
+ *
+ * Parameters
+ *   object : Pointer to object.
+ *
+ * Returns:
+ *   0 if object is not real.
+ *   1 if object is real.
+ */
 int
 object_is_real(
 	const object_t *object
