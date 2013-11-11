@@ -29,16 +29,45 @@ typedef object_t string_t;
 extern "C" {
 #endif
 
+/* Create a new string object from a copy of a null-terminated string.
+ *
+ * Parameters
+ *   s : A null-terminated string.
+ *
+ * Returns
+ *   Pointer to the new string object.
+ */
 string_t *
 string_new(
 	const char *s
 );
 
+/* Create a new string object from a null-terminated string.
+ *
+ * The null-terminated string will not be duplicated.
+ *
+ * Parameters
+ *   s : A null-terminated string.
+ *
+ * Returns
+ *   Pointer to the new string object.
+ */
 string_t *
 string_new_nocopy(
 	char *s
 );
 
+/* Create a new string object from an array of null-terminated strings.
+ *
+ * All string parameters will be duplicated.
+ *
+ * Parameters
+ *   n : Number of elements in s.
+ *   s : Array of null-terminated string.
+ *
+ * Returns
+ *   Pointer to the new string object.
+ */
 string_t *
 string_new_from_array(
 	unsigned int n,
@@ -50,16 +79,42 @@ string_new_from_array(
 	string_new_from_array(sizeof(__args) / sizeof(*__args), __args); \
 })
 
+/* Get the value of string object.
+ *
+ * Parameters
+ *   string : Pointer to string object.
+ *
+ * Returns
+ *   A null-terminated string which is the value of string object.
+ */
 const char *
 string_to_c_str(
 	const string_t *string
 );
 
+/* Get the length of string.
+ *
+ * Parameters
+ *   string : Pointer to string object.
+ *
+ * Returns
+ *   Length (number of characters) of string.
+ */
 size_t
 string_length(
 	const string_t *string
 );
 
+/* Concatenate an array of strings into a string object.
+ *
+ * Parameters
+ *   dest : Pointer to string object.
+ *   n    : Number of elements in src.
+ *   src  : Array of null-terminated strings.
+ *
+ * Returns
+ *   Number of characters added to string object.
+ */
 int
 string_cat_from_array(
 	string_t *dest,
@@ -72,6 +127,16 @@ string_cat_from_array(
 	string_cat_from_array(dest, sizeof(__args) / sizeof(*__args), __args); \
 })
 
+/* Concatenate an array of string objects into a string object.
+ *
+ * Parameters
+ *   dest : Pointer to string object.
+ *   n    : Number of elements in src.
+ *   src  : Array of string objects.
+ *
+ * Returns
+ *   Number of characters added to string object.
+ */
 int
 string_scat_from_array(
 	string_t *dest,
@@ -84,6 +149,15 @@ string_scat_from_array(
 	string_scat_from_array(dest, sizeof(__args) / sizeof(*__args), __args); \
 })
 
+/* Tell if object is a string.
+ *
+ * Parameters
+ *   object : Pointer to object.
+ *
+ * Returns
+ *   0 if object is not a string.
+ *   1 if object is a string.
+ */
 int
 object_is_string(
 	const object_t *object
