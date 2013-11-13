@@ -138,6 +138,38 @@ string_t * string_new(const char *s)
 	return string;
 }
 
+string_t * string_new_from_substring(const char *s, unsigned int offset,
+	size_t length)
+{
+	string_t *string = NULL;
+	string_value_t *string_value = NULL;
+	char buffer[length+1];
+	unsigned int i, j;
+
+	string_type_register();
+
+	i = 0;
+	while (i < offset && s[i] != '\0')
+		i++;
+
+	j = 0;
+	while (i < offset + length && s[i] != '\0')
+		buffer[j++] = s[i++];
+	
+	buffer[j] = '\0';
+
+	string_value = string_value_new_copy(buffer);
+	if (string_value != NULL) {
+		string = object_new(string_type, string_value);
+	}
+	if (string == NULL) {
+		log_error("Failed to create string object");
+		string_value_free(string_value);
+	}
+
+	return string;
+}
+
 string_t * string_new_nocopy(char *s)
 {
 	string_value_t *string_value;

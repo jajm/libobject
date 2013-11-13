@@ -42,6 +42,23 @@ string_new(
 	const char *s
 );
 
+/* Create a new string object from a substring.
+ *
+ * Parameters
+ *   s : A null-terminated string.
+ *   offset : Where the substring starts.
+ *   length : How many characters in the substring.
+ *
+ * Returns
+ *   Pointer to the new string object.
+ */
+string_t *
+string_new_from_substring(
+	const char *s,
+	unsigned int offset,
+	size_t length
+);
+
 /* Create a new string object from a null-terminated string.
  *
  * The null-terminated string will not be duplicated.

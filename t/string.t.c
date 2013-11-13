@@ -12,7 +12,7 @@
 
 int main()
 {
-	plan(11);
+	plan(12);
 	int added;
 
 	string_t *string = string("hello", ", ", "world!");
@@ -39,6 +39,10 @@ int main()
 	char *str = object_to_str(string3);
 	ok(!strcmp(str, "foo bar baz"), "object_to_str returns \"foo bar baz\"");
 	free(str);
+
+	string_t *string4 = string_new_from_substring("foo, bar, baz", 3, 6);
+	string_eq(string4, ", bar,");
+	object_free(string4);
 
 	object_free(string);
 	object_free(string2);
