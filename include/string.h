@@ -96,6 +96,23 @@ string_new_from_array(
 	string_new_from_array(sizeof(__args) / sizeof(*__args), __args); \
 })
 
+/* Create a new string object from a substring.
+ *
+ * Parameters
+ *   string : Pointer to string object.
+ *   offset : Where the substring starts.
+ *   length : How many characters in the substring.
+ *
+ * Returns
+ *   Pointer to the new string object.
+ */
+string_t *
+string_substring(
+	const string_t *string,
+	unsigned int offset,
+	size_t length
+);
+
 /* Get the value of string object.
  *
  * Parameters

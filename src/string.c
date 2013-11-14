@@ -155,7 +155,7 @@ string_t * string_new_from_substring(const char *s, unsigned int offset,
 	j = 0;
 	while (i < offset + length && s[i] != '\0')
 		buffer[j++] = s[i++];
-	
+
 	buffer[j] = '\0';
 
 	string_value = string_value_new_copy(buffer);
@@ -223,6 +223,18 @@ string_t * string_new_from_array(unsigned int n, const char *s[])
 	}
 
 	return string;
+}
+
+string_t * string_substring(const string_t *string,
+	unsigned int offset, size_t length)
+{
+	const char *s;
+	string_t *substring;
+
+	s = string_to_c_str(string);
+	substring = string_new_from_substring(s, offset, length);
+
+	return substring;
 }
 
 const char * string_to_c_str(const string_t *string)
