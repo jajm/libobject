@@ -12,7 +12,7 @@
 
 int main()
 {
-	plan(13);
+	plan(17);
 	int added;
 
 	string_t *string = string("hello", ", ", "world!");
@@ -46,11 +46,26 @@ int main()
 	string_t *string5 = string_substring(string3, 4, 3);
 	string_eq(string5, "bar");
 
+	string_t *string6 = string("foo,bar,baz");
+	array_t *array1 = string_split(string6, ',');
+	iterator_t *it = object_iterator_new(array1);
+	iterator_reset(it);
+	iterator_step(it);
+	string_eq(iterator_get(it), "foo");
+	iterator_step(it);
+	string_eq(iterator_get(it), "bar");
+	iterator_step(it);
+	string_eq(iterator_get(it), "baz");
+	ok(0 < iterator_step(it), NULL);
+	iterator_free(it);
+
 	object_free(string);
 	object_free(string2);
 	object_free(string3);
 	object_free(string4);
 	object_free(string5);
+	object_free(string6);
+	object_free(array1);
 
 	types_finalize();
 

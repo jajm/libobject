@@ -22,6 +22,7 @@
 
 #include <stdlib.h>
 #include "object.h"
+#include "array.h"
 
 typedef object_t string_t;
 
@@ -182,6 +183,21 @@ string_scat_from_array(
 	const string_t *__args[] = { __VA_ARGS__ }; \
 	string_scat_from_array(dest, sizeof(__args) / sizeof(*__args), __args); \
 })
+
+/* Split a string object into multiple string objects.
+ *
+ * Parameters
+ *   string : Pointer to string object.
+ *   sep    : Separator character to split on.
+ *
+ * Returns
+ *   An array of string objects.
+ */
+array_t *
+string_split(
+	string_t *string,
+	char sep
+);
 
 /* Tell if object is a string.
  *

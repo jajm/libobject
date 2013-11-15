@@ -27,6 +27,7 @@
 #include "malloc.h"
 #include "object.h"
 #include "utils.h"
+#include "array.h"
 #include "string.h"
 
 typedef struct {
@@ -293,6 +294,26 @@ int string_scat_from_array(string_t *dest, unsigned int n, const string_t *src[]
 	}
 
 	return string_cat_from_array(dest, n, s);
+}
+
+array_t * string_split(string_t *string, char sep)
+{
+	array_t *a;
+	const char *start, *end;
+
+	assert_object_is_string(string);
+
+	start = string_to_c_str(string);
+	a = array();
+	end = strchr(start, sep);
+	while (end != NULL) {
+		array_push(a, string_new_from_substring(start, 0, end - start));
+		start = end + 1;
+		end = strchr(start, sep);
+	}
+	array_push(a, string_new_from_substring(start, 0, strlen(start)));
+
+	return a;
 }
 
 int object_is_string(const object_t *object)
