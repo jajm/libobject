@@ -296,7 +296,7 @@ int string_scat_from_array(string_t *dest, unsigned int n, const string_t *src[]
 	return string_cat_from_array(dest, n, s);
 }
 
-array_t * string_split(string_t *string, char sep)
+array_t * string_split(const string_t *string, char sep)
 {
 	array_t *a;
 	const char *start, *end;

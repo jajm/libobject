@@ -129,9 +129,9 @@ int object_isa(const object_t *object, const char *type)
 	return 0;
 }
 
-iterator_t * object_iterator_new(object_t *object)
+iterator_t * object_iterator_new(const object_t *object)
 {
-	iterator_t *(*iterator_callback)(object_t *);
+	iterator_t *(*iterator_callback)(const object_t *);
 	iterator_t *iterator = NULL;
 
 	if (object_isset(object)) {
@@ -144,9 +144,9 @@ iterator_t * object_iterator_new(object_t *object)
 	return iterator;
 }
 
-char * object_to_str(object_t *object)
+char * object_to_str(const object_t *object)
 {
-	char *(*to_str_callback)(object_t *);
+	char *(*to_str_callback)(const object_t *);
 	char *str = NULL;
 
 	if (object_isset(object)) {

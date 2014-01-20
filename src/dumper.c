@@ -28,7 +28,7 @@
 #include "foreach.h"
 #include "dumper.h"
 
-void object_dump_into_string(string_t *dump, object_t *object,
+void object_dump_into_string(string_t *dump, const object_t *object,
 	unsigned int indent, _Bool hash_value)
 {
 	char buffer[32];
@@ -83,7 +83,7 @@ void object_dump_into_string(string_t *dump, object_t *object,
 	}
 }
 
-string_t * object_dump(object_t *object, const char *name)
+string_t * object_dump(const object_t *object, const char *name)
 {
 	string_t *dump;
 

@@ -170,7 +170,7 @@ object_isa(
  */
 iterator_t *
 object_iterator_new(
-	object_t *object
+	const object_t *object
 );
 
 /* Convert an object into string.
@@ -189,7 +189,7 @@ object_iterator_new(
  */
 char *
 object_to_str(
-	object_t *object
+	const object_t *object
 );
 
 /* Free memory used by object.

@@ -72,7 +72,7 @@ object_from_json_file(
  */
 char *
 object_to_json(
-	object_t *object,
+	const object_t *object,
 	int flags
 );
 

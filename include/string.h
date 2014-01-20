@@ -195,7 +195,7 @@ string_scat_from_array(
  */
 array_t *
 string_split(
-	string_t *string,
+	const string_t *string,
 	char sep
 );
 

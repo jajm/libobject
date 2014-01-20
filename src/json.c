@@ -140,7 +140,7 @@ object_t * object_from_json_file(const char *filename)
 	return object;
 }
 
-struct json_object * object_to_json_object(object_t *object)
+struct json_object * object_to_json_object(const object_t *object)
 {
 	struct json_object *json_object = NULL;
 
@@ -171,7 +171,7 @@ struct json_object * object_to_json_object(object_t *object)
 	return json_object;
 }
 
-char * object_to_json(object_t *object, int flags)
+char * object_to_json(const object_t *object, int flags)
 {
 	struct json_object *json_object = NULL;
 	const char *json_string;
