@@ -36,6 +36,7 @@ static const char real_type[] = "REAL";
 static _Bool real_type_registered = false;
 
 char *real_to_str(const real_t *real);
+double * real_copy(const double *value);
 
 void real_type_register(void)
 {
@@ -45,6 +46,7 @@ void real_type_register(void)
 		type = type_get(real_type);
 		type_set_callback(type, "free", free);
 		type_set_callback(type, "to_str", real_to_str);
+		type_set_callback(type, "copy", real_copy);
 		real_type_registered = true;
 	}
 }
@@ -99,4 +101,14 @@ char *real_to_str(const real_t *real)
 	sprintf(buffer, "%f", real_get(real));
 
 	return object_strdup(buffer);
+}
+
+double * real_copy(const double *value)
+{
+	double *copy;
+
+	copy = object_malloc(sizeof(double));
+	*copy = *value;
+
+	return copy;
 }

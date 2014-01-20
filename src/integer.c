@@ -36,6 +36,7 @@ static const char integer_type[] = "INTEGER";
 static _Bool integer_type_registered = false;
 
 char *integer_to_str(const integer_t *integer);
+integer_int_t * integer_copy(const integer_int_t *value);
 
 void integer_type_register(void)
 {
@@ -45,6 +46,7 @@ void integer_type_register(void)
 		type = type_get(integer_type);
 		type_set_callback(type, "free", free);
 		type_set_callback(type, "to_str", integer_to_str);
+		type_set_callback(type, "copy", integer_copy);
 		integer_type_registered = true;
 	}
 }
@@ -101,4 +103,14 @@ char *integer_to_str(const integer_t *integer)
 	sprintf(buffer, "%d", *value_p);
 
 	return object_strdup(buffer);
+}
+
+integer_int_t * integer_copy(const integer_int_t *value)
+{
+	integer_int_t *copy;
+
+	copy = object_malloc(sizeof(integer_int_t));
+	*copy = *value;
+
+	return copy;
 }

@@ -35,6 +35,7 @@ static const char boolean_type[] = "BOOLEAN";
 static _Bool boolean_type_registered = false;
 
 char *boolean_to_str(const object_t *object);
+_Bool * boolean_copy(_Bool *value);
 
 void boolean_type_register(void)
 {
@@ -43,6 +44,7 @@ void boolean_type_register(void)
 	if (!boolean_type_registered) {
 		type = type_get(boolean_type);
 		type_set_callback(type, "to_str", boolean_to_str);
+		type_set_callback(type, "copy", boolean_copy);
 		boolean_type_registered = true;
 	}
 }
@@ -98,4 +100,9 @@ char *boolean_to_str(const boolean_t *boolean)
 	s = object_strdup( (*value_p) ? "TRUE" : "FALSE" );
 
 	return s;
+}
+
+_Bool * boolean_copy(_Bool *value)
+{
+	return value;
 }

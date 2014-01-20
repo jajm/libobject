@@ -159,6 +159,23 @@ char * object_to_str(const object_t *object)
 	return str;
 }
 
+object_t * object_copy(const object_t *object)
+{
+	void *(*copy_callback)(void *);
+	object_t *copy = NULL;
+	void *value;
+
+	if (object_isset(object)) {
+		copy_callback = type_get_callback(object->type, "copy");
+		if (copy_callback != NULL) {
+			value = copy_callback(object->value);
+			copy = object_new(object_type(object), value);
+		}
+	}
+
+	return copy;
+}
+
 void object_free_value(object_t *object)
 {
 	void (*free_callback)(void *);

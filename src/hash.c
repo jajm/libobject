@@ -64,6 +64,7 @@ static _Bool hash_type_registered = false;
 
 iterator_t * hash_iterator_new(const object_t *object);
 char *hash_to_str(const hash_t *hash);
+gds_hash_map_t * hash_copy(gds_hash_map_t *value);
 
 void hash_type_register(void)
 {
@@ -74,6 +75,7 @@ void hash_type_register(void)
 		type_set_callback(type, "free", hash_free_callback);
 		type_set_callback(type, "iterator", hash_iterator_new);
 		type_set_callback(type, "to_str", hash_to_str);
+		type_set_callback(type, "copy", hash_copy);
 		hash_type_registered = true;
 	}
 }
@@ -274,4 +276,21 @@ char *hash_to_str(const hash_t *hash)
 	sprintf(buffer, "HASH(%p)", hash);
 
 	return object_strdup(buffer);
+}
+
+gds_hash_map_t * hash_copy(gds_hash_map_t *value)
+{
+	gds_hash_map_t *copy;
+	const char *key;
+	object_t *object;
+
+	copy = gds_hash_map_new(HASH_SIZE,
+		(gds_hash_cb) hash_hash_callback,
+		(gds_cmpkey_cb) hash_cmpkey_callback);
+	gds_hash_map_foreach(key, object, value) {
+		gds_hash_map_set(copy, object_strdup(key), object_copy(object),
+			NULL, NULL);
+	}
+
+	return copy;
 }

@@ -44,6 +44,7 @@ static _Bool array_type_registered = false;
 
 iterator_t * array_iterator_new(const object_t *object);
 char *array_to_str(const array_t *array);
+gds_dlist_t * array_copy(gds_dlist_t *value);
 
 void array_type_register(void)
 {
@@ -54,6 +55,7 @@ void array_type_register(void)
 		type_set_callback(type, "free", array_free_callback);
 		type_set_callback(type, "iterator", array_iterator_new);
 		type_set_callback(type, "to_str", array_to_str);
+		type_set_callback(type, "copy", array_copy);
 		array_type_registered = true;
 	}
 }
@@ -254,4 +256,18 @@ char *array_to_str(const array_t *array)
 	sprintf(buffer, "ARRAY(%p)", array);
 
 	return object_strdup(buffer);
+}
+
+gds_dlist_t * array_copy(gds_dlist_t *value)
+{
+	gds_dlist_t *copy;
+	object_t *object;
+
+	copy = gds_dlist_new();
+
+	gds_dlist_foreach(object, value) {
+		gds_dlist_push(copy, object_copy(object));
+	}
+
+	return copy;
 }

@@ -192,6 +192,26 @@ object_to_str(
 	const object_t *object
 );
 
+/* Create a copy of an object.
+ *
+ * This function call 'copy' callback if it finds one?
+ * Prototype of this callback should be:
+ *   void * copy(const void *value);
+ * It should returns a copy of object value.
+ *
+ * Parameters
+ *   object : Pointer to object.
+ *
+ * Returns
+ *   a copy of object if 'copy' callback is found. object_free() can be safely
+ *   used on this copy.
+ *   NULL if 'copy' callback is not found.
+ */
+object_t *
+object_copy(
+	const object_t *object
+);
+
 /* Free memory used by object.
  *
  * This function call 'free' callback if it finds one.
